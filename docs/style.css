@@ -36,7 +36,7 @@
 .home-news .news-list{display:grid;gap:14px}
 .home-news .article-card{padding:20px 24px}
 .lesson-accordion{margin:0 0 13px;background:white;border:1px solid var(--line);border-radius:13px;overflow:hidden}
-.lesson-accordion summary{list-style:none;display:grid;grid-template-columns:minmax(160px,.8fr) minmax(0,1fr) 25px;align-items:center;gap:22px;min-height:79px;padding:16px 23px;cursor:pointer}
+.lesson-accordion summary{list-style:none;display:grid;grid-template-columns:minmax(160px,.8fr) minmax(0,1fr) max-content;align-items:center;gap:22px;min-height:79px;padding:16px 23px;cursor:pointer}
 .lesson-accordion summary::-webkit-details-marker{display:none}
 .lesson-accordion summary:hover{background:var(--pink)}
 .lesson-accordion summary:focus-visible{outline:3px solid #7445ad;outline-offset:-4px}
@@ -80,8 +80,8 @@
 .social-links a{text-decoration:none}.social-links a:hover{text-decoration:underline}
 footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .video-transcript{margin-top:15px}.video-transcript summary{cursor:pointer;color:var(--accent);font-size:14px}
-@media(max-width:1023px){.grid.hiragana-videos{grid-template-columns:repeat(2,minmax(0,1fr))}.lesson-accordion summary{grid-template-columns:minmax(140px,.8fr) minmax(0,1fr) 20px;gap:13px}}
-@media(max-width:600px){.grid.hiragana-videos,.article-grid{grid-template-columns:minmax(0,1fr)}.lesson-accordion summary{grid-template-columns:minmax(0,1fr) 20px;padding:13px 16px;gap:2px 8px}.lesson-word{font-size:23px}.lesson-translation{grid-row:2;grid-column:1;gap:5px 16px;font-size:14px}.accordion-mark{grid-row:1/3;grid-column:2}.lesson-body{padding:5px 17px 22px}.contact-panel,.article-full{padding:21px 18px}.article-full h2{font-size:25px}.social-links{display:grid;gap:8px}.home-section-title h2{font-size:22px}.home-featured .video-card h3{font-size:22px}}
+@media(max-width:1023px){.grid.hiragana-videos{grid-template-columns:repeat(2,minmax(0,1fr))}.lesson-accordion summary{grid-template-columns:minmax(0,.8fr) minmax(0,1fr) max-content;gap:13px}}
+@media(max-width:600px){.grid.hiragana-videos,.article-grid{grid-template-columns:minmax(0,1fr)}.lesson-accordion summary{grid-template-columns:minmax(0,1fr) max-content;padding:13px 16px;gap:2px 8px}.lesson-word{font-size:23px;grid-column:1/-1}.lesson-translation{grid-row:2;grid-column:1;gap:5px 16px;font-size:14px}.lesson-summary-actions{grid-row:2;grid-column:2}.lesson-body{padding:5px 17px 22px}.contact-panel,.article-full{padding:21px 18px}.article-full h2{font-size:25px}.social-links{display:grid;gap:8px}.home-section-title h2{font-size:22px}.home-featured .video-card h3{font-size:22px}}
 /* Shared menu order; mobile header navigation */
 .mobile-nav{display:none}
 @media(max-width:720px){
@@ -104,3 +104,7 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 
 /* Pronunciation remains available while a lesson is collapsed. */
 .lesson-listen{flex-shrink:0;min-height:44px;padding:8px 12px;font-size:13px;line-height:1.4;white-space:nowrap}
+
+.lesson-summary-actions{display:flex;align-items:center;justify-self:end;gap:12px}
+.lesson-summary-actions .accordion-mark{display:block;width:25px;text-align:center;flex-shrink:0}
+.lesson-translation{min-width:0;overflow-wrap:anywhere}
