@@ -101,7 +101,13 @@ window.LESSONS = {
  */
 window.VIDEOS = {
  // Hiragana videos are embedded on their own page, with EN + Chinese transcripts.
- hiragana:{all:[]},
+ hiragana:{all:[
+  {title:'あいうえお',en:'Hiragana Song: A I U E O',zh:'平假名歌曲：あいうえお',youtubeId:'pgQRhLy8f4Q',captions:[]},
+  {title:'かきくけこ',en:'Hiragana Song: KA KI KU KE KO',zh:'平假名歌曲：かきくけこ',youtubeId:'1m0YTjPRl68',captions:[]},
+  {title:'さしすせそ',en:'Hiragana Song: SA SHI SU SE SO',zh:'平假名歌曲：さしすせそ',youtubeId:'gBb_We6rJpA',captions:[]},
+  {title:'たちつてと',en:'Hiragana Song: TA CHI TSU TE TO',zh:'平假名歌曲：たちつてと',youtubeId:'Df1iS8_60eY',captions:[]},
+  {title:'なにぬねの',en:'Hiragana Song: NA NI NU NE NO',zh:'平假名歌曲：なにぬねの',youtubeId:'1DeK_8Gvs1E',captions:[]}
+ ]},
  listening:{beginner:[],intermediate:[],advanced:[]},
  speaking:{beginner:[],intermediate:[],advanced:[]},
  pronunciation:{beginner:[],intermediate:[],advanced:[]}
