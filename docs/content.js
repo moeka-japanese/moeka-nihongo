@@ -100,6 +100,8 @@ window.LESSONS = {
  * Captions are a bilingual transcript displayed below each linked video.
  */
 window.VIDEOS = {
+ // Hiragana videos are embedded on their own page, with EN + Chinese transcripts.
+ hiragana:{all:[]},
  listening:{beginner:[],intermediate:[],advanced:[]},
  speaking:{beginner:[],intermediate:[],advanced:[]},
  pronunciation:{beginner:[],intermediate:[],advanced:[]}

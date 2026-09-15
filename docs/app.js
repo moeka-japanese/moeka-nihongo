@@ -1,6 +1,7 @@
 'use strict';
 (() => {
 const categories={
+ hiragana:{ja:'{五十音|ごじゅうおん}（ひらがな）',en:'Hiragana',zh:'平假名',icon:'あ',hint:'Watch, listen and repeat / 看视频、听发音、跟着读'},
  vocabulary:{ja:'{単語|たんご}',en:'Vocabulary',zh:'单词',icon:'あ',hint:'Click a card to listen / 点击卡片听发音'},
  grammar:{ja:'{文法|ぶんぽう}',en:'Grammar',zh:'语法',icon:'文',hint:'Choose a pattern / 点击查看用法和例句'},
  listening:{ja:'リスニング',en:'Listening',zh:'听力',icon:'◎',hint:'Listen with MOEKA / 和 MOEKA 一起练听力'},
@@ -8,7 +9,7 @@ const categories={
  pronunciation:{ja:'{発音|はつおん}',en:'Pronunciation',zh:'发音',icon:'声',hint:'Listen and repeat / 听一听，跟着读'},
  characters:{ja:'{文字|もじ}',en:'Characters',zh:'文字',icon:'字',hint:'Hiragana, katakana & kanji / 平假名、片假名与汉字'}
 };
-const levels={N5:'N5',N4:'N4',N3:'N3',N2:'N2',N1:'N1',beginner:'初級 · Beginner',intermediate:'中級 · Intermediate',advanced:'上級 · Advanced'};
+const levels={N5:'N5',N4:'N4',N3:'N3',N2:'N2',N1:'N1',beginner:'初級 · Beginner',intermediate:'中級 · Intermediate',advanced:'上級 · Advanced',all:'ひらがな · Hiragana · 平假名'};
 const $=id=>document.getElementById(id);
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=s=>s.replace(/\{([^|{}]+)\|([^{}]+)\}/g,'$1');
@@ -42,6 +43,9 @@ function render(){
  $('nav').innerHTML=Object.entries(categories).map(([key,v])=>`<a class="nav-item ${key===category?'active':''}" href="#${key}" ${key===category?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${v.icon}</span><span><strong>${jp(v.ja)}</strong><small lang="en">${v.en} / <span lang="zh-Hans">${v.zh}</span></small></span></a>`).join('');
  $('page-title').innerHTML=`${jp(c.ja)}<span lang="en">${c.en}</span>`;
  $('page-subtitle').innerHTML=isVideo()?'Learn with videos, at your own pace. / 通过视频，按自己的节奏学习。':'A little Japanese, every day. / 每天学一点，让日语更熟悉。';
+ if(category==='hiragana')$('page-subtitle').innerHTML='Learn hiragana with MOEKA’s videos. / 和 MOEKA 一起通过视频学习平假名。';
+ $('levels').hidden=category==='hiragana';
+ $('content').classList.toggle('hiragana-videos',category==='hiragana');
  $('levels').innerHTML=availableLevels().map(l=>`<button class="level" type="button" data-level="${l}" aria-pressed="${l===level}">${escape(levels[l])}</button>`).join('');
  const entries=isVideo()?window.VIDEOS[category][level]:window.LESSONS[category][level];
  $('count').textContent=`${entries.length} ${isVideo()?'videos / 个视频':'lessons / 项'}`;
@@ -53,8 +57,13 @@ function render(){
 }
 function validVideoId(s){return typeof s==='string'&&/^[A-Za-z0-9_-]{11}$/.test(s);}
 function renderVideos(entries){
+ if(category==='hiragana'){renderHiraganaVideos(entries);return;}
  if(!entries.length){$('content').innerHTML=`<div class="video-empty"><span class="big-kana" aria-hidden="true">${categories[category].icon}</span><h3>${jp('{動画|どうが}は{準備中|じゅんびちゅう}です')}</h3><p>Lessons for this level are coming soon.<br><span lang="zh-Hans">这个级别的视频课程正在准备中。</span></p><a class="channel-link" href="${escape(window.SITE_CONFIG.youtubeChannel)}" target="_blank" rel="noopener noreferrer">MOEKA on YouTube ↗</a></div>`;return;}
  $('content').innerHTML=entries.map((e,i)=>`<article class="video-card"><div class="video-poster" aria-hidden="true">▶</div><div><h3>${jp(e.title)}</h3>${tr(e.en,e.zh)}${validVideoId(e.youtubeId)?`<a href="https://www.youtube.com/watch?v=${encodeURIComponent(e.youtubeId)}" target="_blank" rel="noopener noreferrer">Watch on YouTube / 在 YouTube 观看 ↗</a>`:'<p>Video unavailable / 视频暂不可用</p>'}${e.captions?.length?`<p><button class="play-button secondary" data-transcript="${i}" type="button">Transcript / 双语字幕</button></p>`:''}</div></article>`).join('');
+}
+function renderHiraganaVideos(entries){
+ if(!entries.length){$('content').innerHTML=`<div class="video-empty"><span class="big-kana" aria-hidden="true">あいうえお</span><h3>${jp('{五十音|ごじゅうおん}の{動画|どうが}は{準備中|じゅんびちゅう}です')}</h3><p>Hiragana videos are coming soon.<br><span lang="zh-Hans">平假名视频正在准备中。</span></p><a class="channel-link" href="${escape(window.SITE_CONFIG.youtubeChannel)}" target="_blank" rel="noopener noreferrer">MOEKA on YouTube ↗</a></div>`;return;}
+ $('content').innerHTML=entries.map(e=>`<article class="video-card hiragana-video">${validVideoId(e.youtubeId)?`<iframe class="youtube-player" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(e.youtubeId)}?playsinline=1" title="${escape(plain(e.title))}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`:'<p>Video unavailable / 视频暂不可用</p>'}<div><h3>${jp(e.title)}</h3>${tr(e.en,e.zh)}${validVideoId(e.youtubeId)?`<a href="https://www.youtube.com/watch?v=${encodeURIComponent(e.youtubeId)}" target="_blank" rel="noopener noreferrer">Watch on YouTube / 在 YouTube 观看 ↗</a>`:''}${e.captions?.length?`<section class="bilingual-captions" aria-label="Bilingual transcript / 双语字幕"><h4>${jp('{字幕|じまく}')} / Transcript / 双语字幕</h4>${e.captions.map(line=>`<div class="caption-line"><p class="japanese">${jp(line.ja)}</p>${tr(line.en,line.zh)}</div>`).join('')}</section>`:''}</div></article>`).join('');
 }
 function renderDetail(e){
  $('detail-content').innerHTML=`<span class="tag">${escape(level)} · ${escape(categories[category].en)}</span><h2 class="detail-word" id="detail-title">${jp(e[0])}</h2>${tr(e[1],e[2])}<div class="detail-actions"><button class="play-button" data-speak="word" type="button">♪ Listen / 听发音</button><button class="play-button secondary" data-speak="slow" type="button">Slow / 慢速</button></div><div class="detail-block"><h3>意味・使い方 / Meaning & usage / 含义与用法</h3><p class="japanese">${jp(e[3])}</p>${category==='grammar'?`<p class="translations">${escape(e[7])}</p>`:''}</div><div class="detail-block"><h3>例文 / Example / 例句</h3><p class="japanese">${jp(e[4])}</p>${tr(e[5],e[6])}<div class="detail-actions"><button class="play-button secondary" data-speak="example" type="button">♪ Listen to example / 听例句</button></div></div><p class="audio-note">Device-generated Japanese voice / 设备合成日语语音</p>`;
