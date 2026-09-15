@@ -82,3 +82,22 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .video-transcript{margin-top:15px}.video-transcript summary{cursor:pointer;color:var(--accent);font-size:14px}
 @media(max-width:1023px){.grid.hiragana-videos{grid-template-columns:repeat(2,minmax(0,1fr))}.lesson-accordion summary{grid-template-columns:minmax(140px,.8fr) minmax(0,1fr) 20px;gap:13px}}
 @media(max-width:600px){.grid.hiragana-videos,.article-grid{grid-template-columns:minmax(0,1fr)}.lesson-accordion summary{grid-template-columns:minmax(0,1fr) 20px;padding:13px 16px;gap:2px 8px}.lesson-word{font-size:23px}.lesson-translation{grid-row:2;grid-column:1;gap:5px 16px;font-size:14px}.accordion-mark{grid-row:1/3;grid-column:2}.lesson-body{padding:5px 17px 22px}.contact-panel,.article-full{padding:21px 18px}.article-full h2{font-size:25px}.social-links{display:grid;gap:8px}.home-section-title h2{font-size:22px}.home-featured .video-card h3{font-size:22px}}
+/* Shared menu order; mobile header navigation */
+.mobile-nav{display:none}
+@media(max-width:720px){
+ .site-header{position:sticky;top:0;z-index:30;background:white;box-shadow:0 3px 14px #382b3308}
+ .site-header .header{height:72px;justify-content:center;padding:0 16px}
+ .layout>.sidebar{display:none}
+ .mobile-nav{position:relative;display:flex;gap:0;width:100%;max-width:100vw;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:#d7a5b6 var(--pink);background:var(--pink);border-bottom:1px solid var(--line);padding:0}
+ .mobile-nav .nav-item{flex:0 0 25%;min-width:108px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:10px 8px 8px;border-radius:0;border-right:1px solid var(--line);border-bottom:3px solid transparent;scroll-snap-align:center;box-shadow:none;text-align:center}
+ .mobile-nav .nav-item.active{background:#fff;color:var(--accent);border-bottom-color:var(--accent)}
+ .mobile-nav .nav-item:focus-visible{outline-offset:-4px}
+ .mobile-nav .nav-icon{display:block;width:auto;height:24px;font-size:22px;line-height:24px}
+ .mobile-nav .nav-label{display:flex;flex-direction:column;width:100%;gap:2px}
+ .mobile-nav .nav-item strong{display:block;min-height:44px;font-size:14px;line-height:1.55;font-weight:500}
+ .mobile-nav .nav-item small{display:block;font-size:12px;line-height:1.45}
+ .mobile-nav .nav-item small>span[lang]{display:block}
+ .mobile-nav .nav-language-divider{display:none}
+ main{scroll-margin-top:220px}
+ html{scroll-padding-top:220px}
+}

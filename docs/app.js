@@ -2,15 +2,15 @@
 (() => {
 const categories={
  home:{ja:'トップ',en:'Home',zh:'首页',icon:'⌂'},
- vocabulary:{ja:'{単語|たんご}',en:'Vocabulary',zh:'单词',icon:'あ'},
+ news:{ja:'ニュース',en:'News',zh:'最新消息',icon:'新'},
  grammar:{ja:'{文法|ぶんぽう}',en:'Grammar',zh:'语法',icon:'文'},
+ vocabulary:{ja:'{単語|たんご}',en:'Vocabulary',zh:'单词',icon:'あ'},
+ materials:{ja:'{教材|きょうざい}',en:'Materials',zh:'教材',icon:'本'},
  listening:{ja:'リスニング',en:'Listening',zh:'听力',icon:'◎'},
  speaking:{ja:'スピーキング',en:'Speaking',zh:'口语',icon:'◌'},
  pronunciation:{ja:'{発音|はつおん}',en:'Pronunciation',zh:'发音',icon:'声'},
- characters:{ja:'{文字|もじ}',en:'Characters',zh:'文字',icon:'字'},
+ characters:{ja:'{漢字|かんじ}',en:'Kanji',zh:'汉字',icon:'字'},
  hiragana:{ja:'{五十音|ごじゅうおん}（ひらがな）',en:'Hiragana',zh:'平假名',icon:'あ'},
- materials:{ja:'{教材|きょうざい}',en:'Materials',zh:'教材',icon:'本'},
- news:{ja:'ニュース',en:'News',zh:'最新消息',icon:'新'},
  contact:{ja:'お{問|と}い{合|あ}わせ',en:'Contact',zh:'联系我们',icon:'✉'}
 };
 const levelLabels={N5:'N5',N4:'N4',N3:'N3',N2:'N2',N1:'N1',beginner:'初級 · Beginner',intermediate:'中級 · Intermediate',advanced:'上級 · Advanced',all:'All / 全部'};
@@ -47,7 +47,7 @@ function renderLessons(){const entries=window.LESSONS[category][level];$('count'
  if(category==='characters'){$('content').innerHTML=entries.map((e,i)=>`<button class="word-card" type="button" data-entry="${i}" aria-label="${esc(plain(e[0]))}"><span class="card-top"><span class="tag">${esc(e[7])}</span><span class="sound-icon" aria-hidden="true">♪</span></span><span class="word">${jp(e[0])}</span>${tr(e[1],e[2])}</button>`).join('');return;}
  $('content').innerHTML=entries.map((e,i)=>`<details class="lesson-accordion" name="lesson-${category}"><summary><span class="lesson-word">${jp(e[0])}</span><span class="lesson-translation"><span lang="en">${esc(e[1])}</span><span lang="zh-Hans">${esc(e[2])}</span></span><span class="accordion-mark" aria-hidden="true">＋</span></summary>${lessonBody(e,i)}</details>`).join('');
 }
-function showCharacter(i){const e=window.LESSONS.characters[level]?.[i];if(!e)return;selected=i;$('detail-content').innerHTML=`<span class="tag">${esc(level)} · Characters</span><h2 class="detail-word" id="detail-title">${jp(e[0])}</h2>${tr(e[1],e[2])}${lessonBody(e,i)}`;$('detail').showModal();speak(e[0]);}
+function showCharacter(i){const e=window.LESSONS.characters[level]?.[i];if(!e)return;selected=i;$('detail-content').innerHTML=`<span class="tag">${esc(level)} · Kanji</span><h2 class="detail-word" id="detail-title">${jp(e[0])}</h2>${tr(e[1],e[2])}${lessonBody(e,i)}`;$('detail').showModal();speak(e[0]);}
 function articleCard(a,kind){const href=kind==='materials'?`#materials/${a.level}/${a.id}`:`#news/all/${a.id}`;return `<a class="article-card" href="${esc(href)}"><div class="article-meta"><time datetime="${esc(a.date)}">${esc(a.date)}</time>${a.level?`<span class="tag">${esc(a.level)}</span>`:''}</div><h3>${jp(a.title)}</h3>${tr(a.enTitle,a.zhTitle)}<span class="article-read">読む / Read / 阅读 →</span></a>`;}
 function paragraphs(text,lang){return String(text||'').trim().split(/\n\s*\n/).filter(Boolean).map(p=>`<p lang="${lang}" class="article-paragraph">${lang==='ja'?jp(p):esc(p)}</p>`).join('');}
 function articleBody(a,kind){return `<article class="article-full"><a class="back-link" href="#${kind}${kind==='materials'?'/'+a.level:''}">← 一覧 / All articles / 返回列表</a><div class="article-meta"><time datetime="${esc(a.date)}">${esc(a.date)}</time>${a.level?`<span class="tag">${esc(a.level)}</span>`:''}</div><h2>${jp(a.title)}</h2>${tr(a.enTitle,a.zhTitle)}<section class="article-language"><h3>日本語</h3>${paragraphs(a.ja,'ja')}</section><section class="article-language"><h3>English</h3>${paragraphs(a.en,'en')}</section><section class="article-language"><h3>中文</h3>${paragraphs(a.zh,'zh-Hans')}</section></article>`;}
@@ -78,9 +78,26 @@ async function loadPosts(force=false){if(loadPromise)return loadPromise;if(!forc
  catch{postsStatus='error';}
  finally{loadPromise=null;if(['home','news','materials'].includes(category))render(false);}})();return loadPromise;
 }
+let navigationKey='';
+function alignMobileNavigation(){
+ const nav=$('mobile-nav');
+ if(!nav.clientWidth)return;
+ const active=nav.querySelector('[aria-current="page"]');
+ if(active)nav.scrollTo({left:Math.max(0,active.offsetLeft-(nav.clientWidth-active.offsetWidth)/2),behavior:'instant'});
+}
+function renderNavigation(){
+ const key=[category,prefs.script,prefs.furigana].join(':');
+ if(key===navigationKey)return;
+ navigationKey=key;
+ const markup=Object.entries(categories).map(([id,c])=>`<a class="nav-item ${id===category?'active':''}" href="#${id}${id==='hiragana'?'/all':''}" ${id===category?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${c.icon}</span><span class="nav-label"><strong>${jp(c.ja)}</strong><small><span lang="en">${c.en}</span><span class="nav-language-divider" aria-hidden="true"> / </span><span lang="zh-Hans">${c.zh}</span></small></span></a>`).join('');
+ $('nav').innerHTML=markup;
+ $('mobile-nav').innerHTML=markup;
+ alignMobileNavigation();
+}
+window.addEventListener('resize',alignMobileNavigation);
 function render(load=true){const c=categories[category];document.body.classList.toggle('hide-ruby',!prefs.furigana);$('kanji').setAttribute('aria-pressed',String(prefs.script==='kanji'));$('hiragana').setAttribute('aria-pressed',String(prefs.script==='hiragana'));$('furigana').checked=prefs.furigana;$('furigana').disabled=prefs.script==='hiragana';
  $('reading-tools').hidden=!['vocabulary','grammar','characters','materials'].includes(category);
- $('nav').innerHTML=Object.entries(categories).map(([key,v])=>`<a class="nav-item ${key===category?'active':''}" href="#${key}${key==='hiragana'?'/all':''}" ${key===category?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${v.icon}</span><span><strong>${jp(v.ja)}</strong><small lang="en">${v.en} / <span lang="zh-Hans">${v.zh}</span></small></span></a>`).join('');
+ renderNavigation();
  $('page-title').innerHTML=category==='home'?'MOEKA NIHONGO':`${jp(c.ja)}<span lang="en">${c.en}</span>`;
  $('page-subtitle').textContent=category==='home'?'いっしょに、日本語。 / Learn Japanese together. / 一起学日语。':`${c.en} / ${c.zh}`;
  const ls=levelsFor(category);$('levels').innerHTML=ls.length>1?ls.map(l=>`<button type="button" class="level" data-level="${l}" aria-pressed="${l===level}">${esc(levelLabels[l])}</button>`).join(''):'';$('levels').hidden=ls.length<=1;
