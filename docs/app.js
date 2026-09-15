@@ -18,8 +18,8 @@ const $=id=>document.getElementById(id), config=window.SITE_CONFIG;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=s=>String(s??'').replace(/\{([^|{}]+)\|([^{}]+)\}/g,'$1');
 const kana=s=>String(s??'').replace(/\{([^|{}]+)\|([^{}]+)\}/g,'$2').replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
-let prefs={script:'kanji',furigana:true};
-try{const p=JSON.parse(localStorage.getItem('moeka-reading')||'{}');if(['kanji','hiragana'].includes(p.script))prefs.script=p.script;if(typeof p.furigana==='boolean')prefs.furigana=p.furigana;}catch{}
+let prefs={script:'kanji',furigana:true,vocabSort:'pos'};
+try{const p=JSON.parse(localStorage.getItem('moeka-reading')||'{}');if(['kanji','hiragana'].includes(p.script))prefs.script=p.script;if(typeof p.furigana==='boolean')prefs.furigana=p.furigana;if(['pos','kana'].includes(p.vocabSort))prefs.vocabSort=p.vocabSort;}catch{}
 let category='home',level='all',articleId='',selected=null,utterance=null,audioToken=0,timer,postsStatus='idle',loadPromise=null,submitPending=false;
 let articles=JSON.parse(JSON.stringify(window.ARTICLES));
 function jp(s){return prefs.script==='hiragana'?esc(kana(s)):esc(s).replace(/\{([^|{}]+)\|([^{}]+)\}/g,'<ruby>$1<rt>$2</rt></ruby>');}
@@ -42,10 +42,29 @@ function videoThumbnail(e,index){return validVideoId(e.youtubeId)?`<div class="v
 function playVideo(button){const e=button.dataset.playVideo.startsWith('featured-')?featuredVideos()[Number(button.dataset.playVideo.slice(9))]:window.VIDEOS[category]?.[level]?.[Number(button.dataset.playVideo)];if(!e||!validVideoId(e.youtubeId))return;const host=button.parentElement;host.innerHTML=`<iframe class="youtube-player" src="https://www.youtube.com/embed/${encodeURIComponent(e.youtubeId)}?autoplay=1&playsinline=1&rel=0" title="${esc(plain(e.title))}" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;host.querySelector('iframe').focus();}
 function videoCard(e,i){return `<article class="video-card">${videoThumbnail(e,i)}<div><h3>${jp(e.title)}</h3>${tr(e.en,e.zh)}<a href="https://www.youtube.com/watch?v=${encodeURIComponent(e.youtubeId)}" target="_blank" rel="noopener noreferrer">YouTube ↗</a>${e.captions?.length?`<details class="video-transcript"><summary>字幕 / Transcript / 双语字幕</summary>${e.captions.map(line=>`<div class="caption-line"><p class="japanese">${jp(line.ja)}</p>${tr(line.en,line.zh)}</div>`).join('')}</details>`:''}</div></article>`;}
 function renderVideos(){const entries=window.VIDEOS[category][level];$('count').textContent=`${entries.length} videos / 个视频`;$('hint').textContent='Click a thumbnail to play / 点击缩略图播放';$('content').innerHTML=entries.length?entries.map(videoCard).join(''):`<div class="video-empty"><span class="big-kana" aria-hidden="true">${categories[category].icon}</span><h3>動画は準備中です</h3><p>Videos are coming soon.<br>视频正在准备中。</p><a class="channel-link" href="${esc(config.youtubeChannel)}" target="_blank" rel="noopener noreferrer">MOEKA on YouTube ↗</a></div>`;}
+const partsOfSpeech={
+ '名詞':{ja:'{名詞|めいし}',en:'Noun',zh:'名词'},
+ '動詞':{ja:'{動詞|どうし}',en:'Verb',zh:'动词'},
+ 'い形容詞':{ja:'い{形容詞|けいようし}',en:'i-adjective',zh:'い形容词'},
+ 'な形容詞':{ja:'な{形容詞|けいようし}',en:'na-adjective',zh:'な形容词'},
+ '副詞':{ja:'{副詞|ふくし}',en:'Adverb',zh:'副词'},
+ '連体詞':{ja:'{連体詞|れんたいし}',en:'Adnominal',zh:'连体词'},
+ '接続詞':{ja:'{接続詞|せつぞくし}',en:'Conjunction',zh:'接续词'},
+ '感動詞':{ja:'{感動詞|かんどうし}',en:'Interjection',zh:'感叹词'},
+ '助詞':{ja:'{助詞|じょし}',en:'Particle',zh:'助词'},
+ '助動詞':{ja:'{助動詞|じょどうし}',en:'Auxiliary',zh:'助动词'}
+};
+const posOrder=Object.keys(partsOfSpeech),kanaCollator=new Intl.Collator('ja',{usage:'sort',sensitivity:'variant',numeric:true});
+function partOfSpeech(e){return String(e[7]||'').split('·')[0].trim();}
+function vocabularyBadge(e){const key=partOfSpeech(e),pos=partsOfSpeech[key];return `<span class="word-pos">${pos?`${jp(pos.ja)} <span lang="en">/ ${esc(pos.en)}</span> <span lang="zh-Hans">/ ${esc(pos.zh)}</span>`:esc(key)}</span>`;}
+function sortedVocabulary(entries){
+ const rank=e=>{const i=posOrder.indexOf(partOfSpeech(e));return i<0?posOrder.length:i;};
+ return entries.map((e,i)=>({e,i})).sort((a,b)=>(prefs.vocabSort==='pos'?rank(a.e)-rank(b.e):0)||kanaCollator.compare(kana(a.e[0]).normalize('NFKC'),kana(b.e[0]).normalize('NFKC'))||a.i-b.i);
+}
 function lessonBody(e,i){return `<div class="lesson-body">${category==='vocabulary'?'':`<div class="detail-block"><h3>意味・使い方 / Meaning & usage / 含义与用法</h3><p class="japanese">${jp(e[3])}</p>${e[8]&&e[9]?tr(e[8],e[9]):''}${category==='grammar'?`<p class="grammar-pattern">${esc(e[7])}</p>`:''}</div>`}<div class="detail-block"><h3>例文 / Example / 例句</h3><p class="japanese">${jp(e[4])}</p>${tr(e[5],e[6])}</div><div class="detail-actions">${category==='characters'?`<button type="button" class="play-button" data-listen="${i}" data-part="word">♪ Listen / 听发音</button>`:''}<button type="button" class="play-button secondary" data-listen="${i}" data-part="example">♪ Example / 听例句</button></div></div>`;}
 function renderLessons(){const entries=window.LESSONS[category][level];$('count').textContent=`${entries.length} lessons / 项`;$('hint').textContent=category==='characters'?'Click a card to listen / 点击卡片听发音':'Click to expand / 点击展开';
  if(category==='characters'){$('content').innerHTML=entries.map((e,i)=>`<button class="word-card" type="button" data-entry="${i}" aria-label="${esc(plain(e[0]))}"><span class="card-top"><span class="tag">${esc(e[7])}</span><span class="sound-icon" aria-hidden="true">♪</span></span><span class="word">${jp(e[0])}</span>${tr(e[1],e[2])}</button>`).join('');return;}
- $('content').innerHTML=entries.map((e,i)=>`<details class="lesson-accordion" name="lesson-${category}"><summary><span class="lesson-word">${jp(e[0])}</span><span class="lesson-translation"><span lang="en">${esc(e[1])}</span><span lang="zh-Hans">${esc(e[2])}</span></span><span class="lesson-summary-actions"><button type="button" class="play-button lesson-listen" data-listen="${i}" data-part="word" aria-label="${esc(plain(e[0]))}: Listen / 听发音">♪ Listen / 听发音</button><span class="accordion-mark" aria-hidden="true">＋</span></span></summary>${lessonBody(e,i)}</details>`).join('');
+ $('content').innerHTML=(category==='vocabulary'?sortedVocabulary(entries):entries.map((e,i)=>({e,i}))).map(({e,i})=>`<details class="lesson-accordion" name="lesson-${category}"><summary><span class="lesson-heading"><span class="lesson-word">${jp(e[0])}</span>${category==='vocabulary'?vocabularyBadge(e):''}</span><span class="lesson-translation"><span lang="en">${esc(e[1])}</span><span lang="zh-Hans">${esc(e[2])}</span></span><span class="lesson-summary-actions"><button type="button" class="play-button lesson-listen" data-listen="${i}" data-part="word" aria-label="${esc(plain(e[0]))}: Listen / 听发音">♪ Listen / 听发音</button><span class="accordion-mark" aria-hidden="true">＋</span></span></summary>${lessonBody(e,i)}</details>`).join('');
 }
 function showCharacter(i){const e=window.LESSONS.characters[level]?.[i];if(!e)return;selected=i;$('detail-content').innerHTML=`<span class="tag">${esc(level)} · Kanji</span><h2 class="detail-word" id="detail-title">${jp(e[0])}</h2>${tr(e[1],e[2])}${lessonBody(e,i)}`;$('detail').showModal();speak(e[0]);}
 function articleCard(a,kind){const href=kind==='materials'?`#materials/${a.level}/${a.id}`:`#news/all/${a.id}`;return `<a class="article-card${kind==='materials'?' material-card':''}" href="${esc(href)}"><div class="article-meta"><time datetime="${esc(a.date)}">${esc(a.date)}</time>${a.level?`<span class="tag">${esc(a.level)}</span>`:''}</div><h3>${jp(a.title)}</h3>${tr(a.enTitle,a.zhTitle)}<span class="article-read">読む / Read / 阅读 →</span></a>`;}
@@ -109,6 +128,7 @@ function renderNavigation(){
 window.addEventListener('resize',alignMobileNavigation);
 function render(load=true){const c=categories[category];document.body.classList.toggle('hide-ruby',!prefs.furigana);$('kanji').setAttribute('aria-pressed',String(prefs.script==='kanji'));$('hiragana').setAttribute('aria-pressed',String(prefs.script==='hiragana'));$('furigana').checked=prefs.furigana;$('furigana').disabled=prefs.script==='hiragana';
  $('reading-tools').hidden=!['vocabulary','grammar','characters','materials'].includes(category);
+ $('vocabulary-tools').hidden=category!=='vocabulary';document.querySelectorAll('[data-vocab-sort]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.vocabSort===prefs.vocabSort)));
  renderNavigation();
  $('page-title').innerHTML=category==='home'?'MOEKA NIHONGO':`${jp(c.ja)}<span lang="en">${c.en}</span>`;
  $('page-subtitle').textContent=category==='home'?'いっしょに、日本語。 / Learn Japanese together. / 一起学日语。':`${c.en} / ${c.zh}`;
@@ -119,7 +139,7 @@ function render(load=true){const c=categories[category];document.body.classList.
  if(load&&['home','materials','news'].includes(category)&&postsStatus==='idle')loadPosts();
 }
 window.addEventListener('hashchange',()=>{stop();$('detail').close();selected=null;readHash();render();});
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.articleTranslation!==undefined)toggleArticleTranslation(b);if(b.dataset.level)navigate(category,b.dataset.level);if(b.dataset.playVideo!==undefined)playVideo(b);if(b.dataset.entry!==undefined)showCharacter(Number(b.dataset.entry));if(b.dataset.listen!==undefined){e.preventDefault();const entry=window.LESSONS[category]?.[level]?.[Number(b.dataset.listen)];if(entry)speak(entry[b.dataset.part==='example'?4:0]);}if(b.hasAttribute('data-retry-posts')){loadPosts(true);render(false);}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(['pos','kana'].includes(b.dataset.vocabSort)){stop();setPrefs('vocabSort',b.dataset.vocabSort);}if(b.dataset.articleTranslation!==undefined)toggleArticleTranslation(b);if(b.dataset.level)navigate(category,b.dataset.level);if(b.dataset.playVideo!==undefined)playVideo(b);if(b.dataset.entry!==undefined)showCharacter(Number(b.dataset.entry));if(b.dataset.listen!==undefined){e.preventDefault();const entry=window.LESSONS[category]?.[level]?.[Number(b.dataset.listen)];if(entry)speak(entry[b.dataset.part==='example'?4:0]);}if(b.hasAttribute('data-retry-posts')){loadPosts(true);render(false);}});
 document.addEventListener('submit',e=>{if(e.target.id==='contact-form'){e.preventDefault();submitContact(e.target);}});
 document.addEventListener('input',e=>{if(e.target.closest('#contact-form'))e.target.setCustomValidity('');});
 document.addEventListener('error',e=>{if(e.target.matches?.('.video-thumbnail img'))e.target.hidden=true;},true);

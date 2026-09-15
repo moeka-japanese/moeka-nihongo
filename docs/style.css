@@ -132,3 +132,16 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .home-video-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .home-video-grid .video-media{min-width:0;overflow:hidden;border-radius:12px;border:1px solid var(--line)}
 @media(max-width:600px){.home-video-grid{gap:8px}.home-video-grid .video-media{border-radius:8px}.home-video-grid .thumbnail-play{width:36px;height:26px;font-size:15px}}
+
+/* Vocabulary classification and reading-based sorting. */
+.lesson-heading{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0}
+.word-pos{display:block;font-size:12px;line-height:1.8;color:var(--accent);background:var(--pink);padding:3px 8px;border-radius:6px;overflow-wrap:anywhere}
+.word-pos span{white-space:nowrap}
+.vocabulary-tools{display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px;margin:0 0 24px}
+.vocabulary-tools[hidden]{display:none}
+.vocabulary-tools>span{font-size:14px}
+.vocabulary-tools small{display:block;font-size:12px;line-height:1.5}
+.vocabulary-sort{display:flex;gap:8px;flex-wrap:wrap}
+.vocabulary-sort button{min-height:44px;padding:9px 16px;border:1px solid var(--line);border-radius:9px;background:white;font:inherit;font-size:14px;text-align:left}
+.vocabulary-sort button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:white}
+@media(max-width:600px){.lesson-heading{grid-column:1/-1}.vocabulary-sort{width:100%}.vocabulary-sort button{flex:1;padding:9px 12px}}
