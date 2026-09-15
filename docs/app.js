@@ -2,15 +2,15 @@
 (() => {
 const categories={
  home:{ja:'トップ',en:'Home',zh:'首页',icon:'⌂'},
- news:{ja:'ニュース',en:'News',zh:'最新消息',icon:'新'},
  grammar:{ja:'{文法|ぶんぽう}',en:'Grammar',zh:'语法',icon:'文'},
  vocabulary:{ja:'{単語|たんご}',en:'Vocabulary',zh:'单词',icon:'あ'},
- materials:{ja:'{教材|きょうざい}',en:'Materials',zh:'教材',icon:'本'},
  listening:{ja:'リスニング',en:'Listening',zh:'听力',icon:'◎'},
  speaking:{ja:'スピーキング',en:'Speaking',zh:'口语',icon:'◌'},
+ materials:{ja:'{教材|きょうざい}',en:'Materials',zh:'教材',icon:'本'},
  pronunciation:{ja:'{発音|はつおん}',en:'Pronunciation',zh:'发音',icon:'声'},
  characters:{ja:'{漢字|かんじ}',en:'Kanji',zh:'汉字',icon:'字'},
  hiragana:{ja:'{五十音|ごじゅうおん}（ひらがな）',en:'Hiragana',zh:'平假名',icon:'あ'},
+ news:{ja:'ニュース',en:'News',zh:'最新消息',icon:'新'},
  contact:{ja:'お{問|と}い{合|あ}わせ',en:'Contact',zh:'联系我们',icon:'✉'}
 };
 const levelLabels={N5:'N5',N4:'N4',N3:'N3',N2:'N2',N1:'N1',beginner:'初級 · Beginner',intermediate:'中級 · Intermediate',advanced:'上級 · Advanced',all:'All / 全部'};
@@ -42,7 +42,7 @@ function videoThumbnail(e,index){return validVideoId(e.youtubeId)?`<div class="v
 function playVideo(button){const e=button.dataset.playVideo==='featured'?featured():window.VIDEOS[category]?.[level]?.[Number(button.dataset.playVideo)];if(!e||!validVideoId(e.youtubeId))return;const host=button.parentElement;host.innerHTML=`<iframe class="youtube-player" src="https://www.youtube.com/embed/${encodeURIComponent(e.youtubeId)}?autoplay=1&playsinline=1&rel=0" title="${esc(plain(e.title))}" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;host.querySelector('iframe').focus();}
 function videoCard(e,i){return `<article class="video-card">${videoThumbnail(e,i)}<div><h3>${jp(e.title)}</h3>${tr(e.en,e.zh)}<a href="https://www.youtube.com/watch?v=${encodeURIComponent(e.youtubeId)}" target="_blank" rel="noopener noreferrer">YouTube ↗</a>${e.captions?.length?`<details class="video-transcript"><summary>字幕 / Transcript / 双语字幕</summary>${e.captions.map(line=>`<div class="caption-line"><p class="japanese">${jp(line.ja)}</p>${tr(line.en,line.zh)}</div>`).join('')}</details>`:''}</div></article>`;}
 function renderVideos(){const entries=window.VIDEOS[category][level];$('count').textContent=`${entries.length} videos / 个视频`;$('hint').textContent='Click a thumbnail to play / 点击缩略图播放';$('content').innerHTML=entries.length?entries.map(videoCard).join(''):`<div class="video-empty"><span class="big-kana" aria-hidden="true">${categories[category].icon}</span><h3>動画は準備中です</h3><p>Videos are coming soon.<br>视频正在准备中。</p><a class="channel-link" href="${esc(config.youtubeChannel)}" target="_blank" rel="noopener noreferrer">MOEKA on YouTube ↗</a></div>`;}
-function lessonBody(e,i){return `<div class="lesson-body"><div class="detail-block"><h3>意味・使い方 / Meaning & usage / 含义与用法</h3><p class="japanese">${jp(e[3])}</p>${e[8]&&e[9]?tr(e[8],e[9]):''}${category==='grammar'?`<p class="grammar-pattern">${esc(e[7])}</p>`:''}</div><div class="detail-block"><h3>例文 / Example / 例句</h3><p class="japanese">${jp(e[4])}</p>${tr(e[5],e[6])}</div><div class="detail-actions">${category==='characters'?`<button type="button" class="play-button" data-listen="${i}" data-part="word">♪ Listen / 听发音</button>`:''}<button type="button" class="play-button secondary" data-listen="${i}" data-part="example">♪ Example / 听例句</button></div></div>`;}
+function lessonBody(e,i){return `<div class="lesson-body">${category==='vocabulary'?'':`<div class="detail-block"><h3>意味・使い方 / Meaning & usage / 含义与用法</h3><p class="japanese">${jp(e[3])}</p>${e[8]&&e[9]?tr(e[8],e[9]):''}${category==='grammar'?`<p class="grammar-pattern">${esc(e[7])}</p>`:''}</div>`}<div class="detail-block"><h3>例文 / Example / 例句</h3><p class="japanese">${jp(e[4])}</p>${tr(e[5],e[6])}</div><div class="detail-actions">${category==='characters'?`<button type="button" class="play-button" data-listen="${i}" data-part="word">♪ Listen / 听发音</button>`:''}<button type="button" class="play-button secondary" data-listen="${i}" data-part="example">♪ Example / 听例句</button></div></div>`;}
 function renderLessons(){const entries=window.LESSONS[category][level];$('count').textContent=`${entries.length} lessons / 项`;$('hint').textContent=category==='characters'?'Click a card to listen / 点击卡片听发音':'Click to expand / 点击展开';
  if(category==='characters'){$('content').innerHTML=entries.map((e,i)=>`<button class="word-card" type="button" data-entry="${i}" aria-label="${esc(plain(e[0]))}"><span class="card-top"><span class="tag">${esc(e[7])}</span><span class="sound-icon" aria-hidden="true">♪</span></span><span class="word">${jp(e[0])}</span>${tr(e[1],e[2])}</button>`).join('');return;}
  $('content').innerHTML=entries.map((e,i)=>`<details class="lesson-accordion" name="lesson-${category}"><summary><span class="lesson-word">${jp(e[0])}</span><span class="lesson-translation"><span lang="en">${esc(e[1])}</span><span lang="zh-Hans">${esc(e[2])}</span></span><span class="lesson-summary-actions"><button type="button" class="play-button lesson-listen" data-listen="${i}" data-part="word" aria-label="${esc(plain(e[0]))}: Listen / 听发音">♪ Listen / 听发音</button><span class="accordion-mark" aria-hidden="true">＋</span></span></summary>${lessonBody(e,i)}</details>`).join('');
