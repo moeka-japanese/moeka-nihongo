@@ -1,0 +1,37 @@
+name: ニュースを投稿する
+description: 日本語・英語・中国語のお知らせを追加します（サイト所有者専用）。
+title: "[ニュース] "
+body:
+  - type: markdown
+    attributes:
+      value: "タイトルの [ニュース] を残して記事名を入力してください。moeka-japanese が作成した公開中（Open）の記事だけがトップとニュースに掲載されます。"
+  - type: input
+    id: en_title
+    attributes:
+      label: English title
+    validations:
+      required: true
+  - type: input
+    id: zh_title
+    attributes:
+      label: 中文标题
+    validations:
+      required: true
+  - type: textarea
+    id: ja
+    attributes:
+      label: 日本語本文
+    validations:
+      required: true
+  - type: textarea
+    id: en
+    attributes:
+      label: English text
+    validations:
+      required: true
+  - type: textarea
+    id: zh
+    attributes:
+      label: 中文正文
+    validations:
+      required: true

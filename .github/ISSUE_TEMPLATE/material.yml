@@ -1,0 +1,45 @@
+name: 教材を投稿する
+description: 日本語・英語・中国語の記事教材を追加します（サイト所有者専用）。
+title: "[教材] "
+body:
+  - type: markdown
+    attributes:
+      value: "タイトルの [教材] を残して記事名を入力してください。moeka-japanese が作成した公開中（Open）の記事だけがサイトに掲載されます。"
+  - type: dropdown
+    id: level
+    attributes:
+      label: 難易度
+      options: [N5, N4, N3, N2, N1]
+    validations:
+      required: true
+  - type: input
+    id: en_title
+    attributes:
+      label: English title
+    validations:
+      required: true
+  - type: input
+    id: zh_title
+    attributes:
+      label: 中文标题
+    validations:
+      required: true
+  - type: textarea
+    id: ja
+    attributes:
+      label: 日本語本文
+      description: "段落は空行で区切ります。読みを付ける場合は {日本語|にほんご} と書きます。HTMLは使えません。"
+    validations:
+      required: true
+  - type: textarea
+    id: en
+    attributes:
+      label: English text
+    validations:
+      required: true
+  - type: textarea
+    id: zh
+    attributes:
+      label: 中文正文
+    validations:
+      required: true
