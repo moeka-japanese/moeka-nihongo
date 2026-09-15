@@ -42,7 +42,7 @@ GitHub Pagesだけでは、受信先アドレスを隠したままメールを�
 2. 発行された `https://formspree.io/f/フォームID` を、`docs/articles.js` の `contactEndpoint` に設定します。
 3. 受信先アドレス自体や秘密鍵はファイルに書かないでください。
 
-現時点では接続先未設定のため、送信ボタンは無効です。設定後は名前・メールアドレス・本文をFormspreeへ送ります。通信成功時にだけ送信完了を表示し、失敗した場合は入力を保持します。受信テストのメールは送っていません。
+接続先 `https://formspree.io/f/mgaegbzn` を設定済みです。名前・メールアドレス・本文をFormspreeへ送ります。通信成功時にだけ送信完了を表示し、失敗した場合は入力を保持します。受信テストのメールは送っていません。
 
 公式説明：[Formspree HTML forms](https://formspree.io/html/)
 

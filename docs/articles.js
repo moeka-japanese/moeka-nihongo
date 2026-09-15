@@ -19,7 +19,7 @@ Object.assign(window.SITE_CONFIG,{
  articleAuthor:'moeka-japanese',
  // Create a Formspree form with your private recipient, then paste only its public /f/ endpoint.
  // Never put a recipient email address or a secret API key in this file.
- contactEndpoint:'',
+ contactEndpoint:'https://formspree.io/f/mgaegbzn',
  xUrl:'https://x.com/moeka_happy_',
  rednoteUrl:'https://www.xiaohongshu.com/search_result?keyword=moeka_japanese&type=51'
 });
