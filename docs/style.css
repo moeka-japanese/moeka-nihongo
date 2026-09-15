@@ -41,7 +41,7 @@
 .lesson-accordion summary:hover{background:var(--pink)}
 .lesson-accordion summary:focus-visible{outline:3px solid #7445ad;outline-offset:-4px}
 .lesson-word{font-size:25px;line-height:1.9;overflow-wrap:anywhere}
-.lesson-translation{display:flex;flex-wrap:wrap;gap:8px 24px;color:var(--muted);font-size:15px}
+.lesson-translation{display:flex;align-items:center;flex-wrap:wrap;gap:8px 24px;color:var(--muted);font-size:15px}
 .accordion-mark{font-size:22px;color:var(--accent)}
 .lesson-accordion[open] summary{background:var(--pink);border-bottom:1px solid var(--line)}
 .lesson-accordion[open] .accordion-mark{transform:rotate(45deg)}
@@ -101,3 +101,6 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
  main{scroll-margin-top:220px}
  html{scroll-padding-top:220px}
 }
+
+/* Pronunciation remains available while a lesson is collapsed. */
+.lesson-listen{flex-shrink:0;min-height:44px;padding:8px 12px;font-size:13px;line-height:1.4;white-space:nowrap}
