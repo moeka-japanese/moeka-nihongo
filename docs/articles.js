@@ -14,7 +14,7 @@ window.ARTICLES = {
  }]
 };
 Object.assign(window.SITE_CONFIG,{
- featuredVideoId:'OpGdftlZEY0',
+ featuredVideoIds:['OpGdftlZEY0','MrP-c1T7Wts','pgQRhLy8f4Q'],
  repository:'moeka-japanese/moeka-nihongo',
  articleAuthor:'moeka-japanese',
  // Create a Formspree form with your private recipient, then paste only its public /f/ endpoint.
