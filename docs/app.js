@@ -13,7 +13,7 @@ const categories={
  news:{ja:'ニュース',en:'News',zh:'最新消息',icon:'新'},
  contact:{ja:'お{問|と}い{合|あ}わせ',en:'Contact',zh:'联系我们',icon:'✉'}
 };
-const levelLabels={N5:'N5',N4:'N4',N3:'N3',N2:'N2',N1:'N1',beginner:'初級 · Beginner',intermediate:'中級 · Intermediate',advanced:'上級 · Advanced',all:'All / 全部'};
+const levelLabels={N5:'N5',N4:'N4',N3:'N3',N2:'N2',N1:'N1',ondoku:'音読 / Read aloud / 朗读',beginner:'初級 · Beginner',intermediate:'中級 · Intermediate',advanced:'上級 · Advanced',all:'All / 全部'};
 const $=id=>document.getElementById(id), config=window.SITE_CONFIG;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=s=>String(s??'').replace(/\{([^|{}]+)\|([^{}]+)\}/g,'$1');
@@ -32,7 +32,7 @@ function speak(text){stop();if(!('speechSynthesis'in window)){notify('Audio is u
  const token=audioToken;utterance=new SpeechSynthesisUtterance(plain(text));utterance.lang='ja-JP';utterance.rate=.85;if(voice)utterance.voice=voice;
  utterance.onerror=e=>{if(token===audioToken&&!['interrupted','canceled'].includes(e.error))notify('Could not play audio. / 播放失败，请重试。');};window.speechSynthesis.speak(utterance);
 }
-function levelsFor(c){if(c==='materials')return ['N5','N4','N3','N2','N1'];if(window.LESSONS[c])return Object.keys(window.LESSONS[c]);if(window.VIDEOS[c])return Object.keys(window.VIDEOS[c]);return ['all'];}
+function levelsFor(c){if(c==='materials')return ['N5','N4','N3','N2','N1','ondoku'];if(window.LESSONS[c])return Object.keys(window.LESSONS[c]);if(window.VIDEOS[c])return Object.keys(window.VIDEOS[c]);return ['all'];}
 function readHash(){const [c,l,id]=location.hash.slice(1).split('/');category=Object.hasOwn(categories,c)?c:'home';level=levelsFor(category).includes(l)?l:levelsFor(category)[0];articleId=id||'';}
 function navigate(c,l,id=''){if(!Object.hasOwn(categories,c)||!levelsFor(c).includes(l))throw Error('Invalid category or level');stop();$('detail').close();selected=null;category=c;level=l;articleId=id;history.replaceState(null,'',`#${c}${l==='all'&&!id?'':'/'+l}${id?'/'+id:''}`);render();}
 function setPrefs(key,value){prefs[key]=value;try{localStorage.setItem('moeka-reading',JSON.stringify(prefs));}catch{}render();}
@@ -81,7 +81,7 @@ function showCharacter(i){const e=window.LESSONS.characters[level]?.[i];if(!e)re
 function articleCard(a,kind){const href=kind==='materials'?`#materials/${a.level}/${a.id}`:`#news/all/${a.id}`;return `<a class="article-card${kind==='materials'?' material-card':''}" href="${esc(href)}"><div class="article-meta"><time datetime="${esc(a.date)}">${esc(a.date)}</time>${a.level?`<span class="tag">${esc(a.level)}</span>`:''}</div><h3>${jp(a.title)}</h3>${tr(a.enTitle,a.zhTitle)}<span class="article-read">読む / Read / 阅读 →</span></a>`;}
 function paragraphs(text,lang){return String(text||'').trim().split(/\n\s*\n/).filter(Boolean).map(p=>`<p lang="${lang}" class="article-paragraph">${lang==='ja'?jp(p):esc(p)}</p>`).join('');}
 function articleBody(a,kind){return `<article class="article-full"><a class="back-link" href="#${kind}${kind==='materials'?'/'+a.level:''}">← 一覧 / All articles / 返回列表</a><div class="article-meta"><time datetime="${esc(a.date)}">${esc(a.date)}</time>${a.level?`<span class="tag">${esc(a.level)}</span>`:''}</div><h2>${jp(a.title)}</h2>${tr(a.enTitle,a.zhTitle)}<section class="article-language"><h3>日本語</h3>${paragraphs(a.ja,'ja')}</section>${kind==='materials'?articleTranslations(a):`<section class="article-language"><h3>English</h3>${paragraphs(a.en,'en')}</section><section class="article-language"><h3>中文</h3>${paragraphs(a.zh,'zh-Hans')}</section>`}</article>`;}
-function articleTranslations(a){return `<div class="article-translations"><div class="article-translation-buttons" role="group" aria-label="翻訳 / Translations / 翻译"><button type="button" id="article-translation-en-button" class="translation-button" data-article-translation="en" aria-expanded="false" aria-controls="article-translation-en" lang="en">English <span aria-hidden="true">＋</span></button><button type="button" id="article-translation-zh-button" class="translation-button" data-article-translation="zh" aria-expanded="false" aria-controls="article-translation-zh" lang="zh-Hans">中文 <span aria-hidden="true">＋</span></button></div><section id="article-translation-en" class="article-language translation-panel" aria-labelledby="article-translation-en-button" hidden>${paragraphs(a.en,'en')}</section><section id="article-translation-zh" class="article-language translation-panel" aria-labelledby="article-translation-zh-button" hidden>${paragraphs(a.zh,'zh-Hans')}</section></div>`;}
+function articleTranslations(a,id='article'){const prefix=esc(id);return `<div class="article-translations"><div class="article-translation-buttons" role="group" aria-label="翻訳 / Translations / 翻译"><button type="button" id="${prefix}-translation-en-button" class="translation-button" data-article-translation="en" aria-expanded="false" aria-controls="${prefix}-translation-en" lang="en">English <span aria-hidden="true">＋</span></button><button type="button" id="${prefix}-translation-zh-button" class="translation-button" data-article-translation="zh" aria-expanded="false" aria-controls="${prefix}-translation-zh" lang="zh-Hans">中文 <span aria-hidden="true">＋</span></button></div><section id="${prefix}-translation-en" class="article-language translation-panel" aria-labelledby="${prefix}-translation-en-button" hidden>${paragraphs(a.en,'en')}</section><section id="${prefix}-translation-zh" class="article-language translation-panel" aria-labelledby="${prefix}-translation-zh-button" hidden>${paragraphs(a.zh,'zh-Hans')}</section></div>`;}
 function toggleArticleTranslation(button){
  const group=button.closest('.article-translations');
  if(!group)return;
@@ -94,7 +94,16 @@ function toggleArticleTranslation(button){
  });
 }
 function remoteStatus(){return postsStatus==='error'?'<p class="load-notice" role="status">最新の記事を取得できませんでした。<br>Could not load the latest posts. / 暂时无法获取最新文章。 <button type="button" data-retry-posts>再読み込み / Retry / 重试</button></p>':postsStatus==='loading'?'<p class="load-notice" role="status">Loading latest posts… / 正在读取最新文章…</p>':'';}
-function renderArticles(kind){const items=articles[kind].filter(a=>kind!=='materials'||a.level===level);$('count').textContent=`${items.length} articles / 篇`;$('hint').textContent='';
+function renderReadAloud(){
+ const lessons=window.READ_ALOUD;
+ $('content').className='grid read-aloud-list';
+ $('count').textContent=`${lessons.length} topics / テーマ / 个主题`;
+ $('section-title').innerHTML=`${jp('{初級|しょきゅう}')} / Beginner / 初级`;
+ $('hint').textContent='＋で教材を開く / Expand to read / 点击展开教材';
+ $('content').innerHTML=`<div class="read-aloud-intro"><h3>${jp('{自己紹介|じこしょうかい}をしてみよう')}</h3>${tr('Let’s introduce ourselves.','试着做自我介绍吧。')}<p>${jp('{名前|なまえ}や{内容|ないよう}を{自分|じぶん}に{合|あ}わせて、{声|こえ}に{出|だ}して{読|よ}みましょう。')}</p>${tr('These are model texts. Adapt the details to yourself and read aloud.','以下是示范短文。请根据自己的情况修改内容，并朗读出来。')}</div>`+lessons.map((lesson,i)=>`<details class="reading-lesson" name="read-aloud-lessons"><summary><span class="reading-lesson-title">${jp(lesson.title)}</span><span class="reading-expand" aria-hidden="true">＋</span></summary><div class="reading-lesson-body"><section class="reading-text"><h4>本文 / Text / 正文</h4>${paragraphs(lesson.ja,'ja')}</section>${articleTranslations({en:lesson.enTitle+'\n\n'+lesson.en,zh:lesson.zhTitle+'\n\n'+lesson.zh},'ondoku-'+lesson.id)}<section class="reading-vocabulary"><h4>${jp('{単語|たんご}')} / Vocabulary / 单词</h4><table><caption class="visually-hidden">${esc(plain(lesson.title))} — Vocabulary / 单词</caption><thead><tr><th scope="col">日本語</th><th scope="col" lang="en">English</th><th scope="col" lang="zh-Hans">中文</th></tr></thead><tbody>${lesson.vocabulary.map(word=>`<tr><th scope="row" lang="ja">${jp(word.word)}</th><td lang="en">${esc(word.en)}</td><td lang="zh-Hans">${esc(word.zh)}</td></tr>`).join('')}</tbody></table></section></div></details>`).join('');
+}
+function isPostPage(){return ['home','news'].includes(category)||(category==='materials'&&level!=='ondoku');}
+function renderArticles(kind){if(kind==='materials'&&level==='ondoku'){renderReadAloud();return;}const items=articles[kind].filter(a=>kind!=='materials'||a.level===level);$('count').textContent=`${items.length} articles / 篇`;$('hint').textContent='';
  if(articleId){const a=articles[kind].find(a=>a.id===articleId&&(kind!=='materials'||a.level===level));$('content').innerHTML=a?articleBody(a,kind):`<div class="video-empty"><p>${postsStatus==='loading'?'Loading article… / 正在读取文章…':'記事が見つかりません。 / Article not found. / 未找到文章。'}</p></div>${remoteStatus()}`;return;}
  $('content').innerHTML=`${remoteStatus()}${items.length?items.map(a=>articleCard(a,kind)).join(''):'<div class="video-empty"><p>記事は準備中です。<br>Articles are coming soon. / 文章正在准备中。</p></div>'}`;
 }
@@ -114,11 +123,11 @@ function parseIssue(issue){if(issue.pull_request||issue.state!=='open'||issue.us
  const values=['English title','中文标题','日本語本文','English text','中文正文'];if(values.some(k=>!fields[k]||fields[k]==='_No response_'))return null;
  return {kind,id:'issue-'+issue.number,title:match[2],level:kind==='materials'?fields['難易度']:undefined,date:String(issue.created_at).slice(0,10),enTitle:fields['English title'],zhTitle:fields['中文标题'],ja:fields['日本語本文'],en:fields['English text'],zh:fields['中文正文']};
 }
-async function loadPosts(force=false){if(loadPromise)return loadPromise;if(!force&&postsStatus==='loaded')return;postsStatus='loading';if(['home','news','materials'].includes(category))render(false);
+async function loadPosts(force=false){if(loadPromise)return loadPromise;if(!force&&postsStatus==='loaded')return;postsStatus='loading';if(isPostPage())render(false);
  loadPromise=(async()=>{try{const collected=[];for(let page=1;;page++){const url=`https://api.github.com/repos/${config.repository}/issues?state=open&creator=${encodeURIComponent(config.articleAuthor)}&per_page=100&sort=created&direction=desc&page=${page}`;const res=await fetch(url,{headers:{Accept:'application/vnd.github+json'},credentials:'omit',signal:AbortSignal.timeout(15000)});if(!res.ok)throw Error('Posts unavailable');const list=await res.json();if(!Array.isArray(list))throw Error('Invalid posts');collected.push(...list.map(parseIssue).filter(Boolean));if(list.length<100)break;}
  const next=JSON.parse(JSON.stringify(window.ARTICLES));for(const a of collected)next[a.kind].push(a);for(const list of Object.values(next))list.sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));articles=next;postsStatus='loaded';}
  catch{postsStatus='error';}
- finally{loadPromise=null;if(['home','news','materials'].includes(category))render(false);}})();return loadPromise;
+ finally{loadPromise=null;if(isPostPage())render(false);}})();return loadPromise;
 }
 let navigationKey='';
 function alignMobileNavigation(){
@@ -147,7 +156,7 @@ function render(load=true){const c=categories[category];document.body.classList.
  $('level-row').hidden=['home','contact'].includes(category);$('section-caption').hidden=['home','contact'].includes(category);$('section-title').innerHTML=ls.length>1?`${esc(levelLabels[level])} / ${jp(c.ja)}`:jp(c.ja);$('count').textContent='';$('hint').textContent='';
  $('content').className='grid'+(['vocabulary','grammar'].includes(category)?' accordion-list':category==='hiragana'?' hiragana-videos':['home','contact'].includes(category)?' page-stack':['materials','news'].includes(category)?(articleId?' page-stack':category==='materials'?' materials-list':' article-grid'):'');
  if(category==='home')renderHome();else if(category==='contact')renderContact();else if(['materials','news'].includes(category))renderArticles(category);else if(window.VIDEOS[category])renderVideos();else renderLessons();
- if(load&&['home','materials','news'].includes(category)&&postsStatus==='idle')loadPosts();
+ if(load&&isPostPage()&&postsStatus==='idle')loadPosts();
 }
 window.addEventListener('hashchange',()=>{stop();$('detail').close();selected=null;readHash();render();});
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(['pos','kana'].includes(b.dataset.vocabSort)){stop();setPrefs('vocabSort',b.dataset.vocabSort);}if(b.dataset.articleTranslation!==undefined)toggleArticleTranslation(b);if(b.dataset.level)navigate(category,b.dataset.level);if(b.dataset.playVideo!==undefined)playVideo(b);if(b.dataset.entry!==undefined)showCharacter(Number(b.dataset.entry));if(b.dataset.kanjiReading!==undefined&&category==='characters'){e.preventDefault();speak(b.dataset.kanjiReading);}if(b.dataset.listen!==undefined){e.preventDefault();const entry=window.LESSONS[category]?.[level]?.[Number(b.dataset.listen)];if(entry)speak(entry[b.dataset.part==='example'?4:0]);}if(b.hasAttribute('data-retry-posts')){loadPosts(true);render(false);}});
