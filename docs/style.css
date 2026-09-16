@@ -145,3 +145,30 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .vocabulary-sort button{min-height:44px;padding:9px 16px;border:1px solid var(--line);border-radius:9px;background:white;font:inherit;font-size:14px;text-align:left}
 .vocabulary-sort button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:white}
 @media(max-width:600px){.lesson-heading{grid-column:1/-1}.vocabulary-sort{width:100%}.vocabulary-sort button{flex:1;padding:9px 12px}}
+
+/* Grouped kanji cards: a square face and expandable readings. */
+.grid.kanji-groups{display:block}
+.kanji-group{margin-bottom:34px}
+.kanji-group>h3{font-size:24px;font-weight:500;line-height:1.8;margin:0 0 15px}
+.kanji-group>h3 small{display:block;font-size:14px;color:var(--muted);font-family:var(--font);line-height:1.5}
+.kanji-card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;align-items:start}
+.kanji-card{border:1px solid var(--line);border-radius:12px;background:white;overflow:hidden;min-width:0}
+.kanji-card>summary{display:grid;place-items:center;position:relative;aspect-ratio:1;list-style:none;cursor:pointer;padding:15px}
+.kanji-card>summary::-webkit-details-marker{display:none}
+.kanji-card>summary:hover,.kanji-card[open]>summary{background:var(--pink)}
+.kanji-card>summary:focus-visible{outline:3px solid #7445ad;outline-offset:-4px}
+.kanji-glyph{font-family:var(--font);font-size:clamp(56px,6vw,90px);line-height:1;font-weight:400}
+.kanji-expand{position:absolute;bottom:10px;right:10px;display:grid;place-items:center;min-width:36px;min-height:36px;border-radius:50%;background:var(--pink);color:var(--accent);font-size:24px;line-height:1}
+.kanji-card[open] .kanji-expand{transform:rotate(45deg)}
+.kanji-card-body{border-top:1px solid var(--line);padding:16px}
+.kanji-card-body>.translations{padding-bottom:12px;overflow-wrap:anywhere}
+.kanji-reading-section{padding:12px 0 0;border-top:1px solid var(--line);margin-top:10px}
+.kanji-reading-section h4{font-size:13px;font-weight:500;color:var(--accent);line-height:1.8;margin:0 0 10px}
+.kanji-reading-buttons{display:flex;flex-wrap:wrap;gap:7px}
+.kanji-reading-button{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;max-width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--pink);font:inherit;font-size:16px}
+.kanji-reading-button>span:first-child{overflow-wrap:anywhere}
+.kanji-reading-button>span:last-child{color:var(--accent)}
+.kanji-reading-button:hover{border-color:var(--accent)}
+.kanji-no-reading,.kanji-reading-note{font-size:12px;color:var(--muted)}
+@media(max-width:1100px){.kanji-card-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.kanji-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.kanji-card-body{padding:12px}.kanji-glyph{font-size:64px}}
