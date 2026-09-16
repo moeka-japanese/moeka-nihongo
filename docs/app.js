@@ -94,6 +94,24 @@ function toggleArticleTranslation(button){
  });
 }
 function remoteStatus(){return postsStatus==='error'?'<p class="load-notice" role="status">最新の記事を取得できませんでした。<br>Could not load the latest posts. / 暂时无法获取最新文章。 <button type="button" data-retry-posts>再読み込み / Retry / 重试</button></p>':postsStatus==='loading'?'<p class="load-notice" role="status">Loading latest posts… / 正在读取最新文章…</p>':'';}
+let guideLanguage='ja';
+function renderReadingGuide(){
+ const host=$('reading-guide');
+ host.hidden=category!=='materials'||level!=='ondoku';
+ if(host.hidden)return;
+ const open=host.querySelector('details')?.open||false;
+ const labels={ja:'日本語',en:'English',zh:'中文'};
+ host.innerHTML=`<details class="reading-guide-box" ${open?'open':''}><summary><span>${jp('{音読|おんどく}のポイント')}</span><span class="guide-expand" aria-hidden="true">＋</span></summary><div class="reading-guide-body"><div class="guide-language-buttons" role="group" aria-label="言語 / Language / 语言">${Object.entries(labels).map(([lang,label])=>`<button type="button" id="guide-button-${lang}" data-guide-language="${lang}" aria-pressed="${lang===guideLanguage}" aria-controls="guide-panel-${lang}" lang="${lang==='zh'?'zh-Hans':lang}">${label}</button>`).join('')}</div>${Object.entries(window.READING_GUIDE).map(([lang,guide])=>{const text=value=>lang==='ja'?jp(value):esc(value);return `<section id="guide-panel-${lang}" class="guide-language-panel" lang="${lang==='zh'?'zh-Hans':lang}" aria-labelledby="guide-button-${lang}" ${lang===guideLanguage?'':'hidden'}><h3>${text(guide.title)}</h3>${guide.tips.map((tip,i)=>`<section class="guide-tip"><h4>${String.fromCharCode(0x2460+i)}${text(tip.title)}</h4><p>${text(tip.body)}</p></section>`).join('')}<p class="guide-closing">${text(guide.closing)}</p></section>`;}).join('')}</div></details>`;
+}
+function selectGuideLanguage(lang){
+ if(!['ja','en','zh'].includes(lang))return;
+ guideLanguage=lang;
+ $('reading-guide').querySelectorAll('[data-guide-language]').forEach(button=>{
+  const active=button.dataset.guideLanguage===lang;
+  button.setAttribute('aria-pressed',String(active));
+  $(button.getAttribute('aria-controls')).hidden=!active;
+ });
+}
 function renderReadAloud(){
  const lessons=window.READ_ALOUD;
  $('content').className='grid read-aloud-list';
@@ -150,6 +168,7 @@ function render(load=true){const c=categories[category];document.body.classList.
  $('reading-tools').hidden=!['vocabulary','grammar','characters','materials'].includes(category);
  $('vocabulary-tools').hidden=category!=='vocabulary';document.querySelectorAll('[data-vocab-sort]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.vocabSort===prefs.vocabSort)));
  renderNavigation();
+ renderReadingGuide();
  $('page-title').innerHTML=category==='home'?'MOEKA NIHONGO':`${jp(c.ja)}<span lang="en">${c.en}</span>`;
  $('page-subtitle').textContent=category==='home'?'いっしょに、日本語。 / Learn Japanese together. / 一起学日语。':`${c.en} / ${c.zh}`;
  const ls=levelsFor(category);$('levels').innerHTML=ls.length>1?ls.map(l=>`<button type="button" class="level" data-level="${l}" aria-pressed="${l===level}">${esc(levelLabels[l])}</button>`).join(''):'';$('levels').hidden=ls.length<=1;
@@ -159,7 +178,7 @@ function render(load=true){const c=categories[category];document.body.classList.
  if(load&&isPostPage()&&postsStatus==='idle')loadPosts();
 }
 window.addEventListener('hashchange',()=>{stop();$('detail').close();selected=null;readHash();render();});
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(['pos','kana'].includes(b.dataset.vocabSort)){stop();setPrefs('vocabSort',b.dataset.vocabSort);}if(b.dataset.articleTranslation!==undefined)toggleArticleTranslation(b);if(b.dataset.level)navigate(category,b.dataset.level);if(b.dataset.playVideo!==undefined)playVideo(b);if(b.dataset.entry!==undefined)showCharacter(Number(b.dataset.entry));if(b.dataset.kanjiReading!==undefined&&category==='characters'){e.preventDefault();speak(b.dataset.kanjiReading);}if(b.dataset.listen!==undefined){e.preventDefault();const entry=window.LESSONS[category]?.[level]?.[Number(b.dataset.listen)];if(entry)speak(entry[b.dataset.part==='example'?4:0]);}if(b.hasAttribute('data-retry-posts')){loadPosts(true);render(false);}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(['pos','kana'].includes(b.dataset.vocabSort)){stop();setPrefs('vocabSort',b.dataset.vocabSort);}if(b.dataset.guideLanguage!==undefined)selectGuideLanguage(b.dataset.guideLanguage);if(b.dataset.articleTranslation!==undefined)toggleArticleTranslation(b);if(b.dataset.level)navigate(category,b.dataset.level);if(b.dataset.playVideo!==undefined)playVideo(b);if(b.dataset.entry!==undefined)showCharacter(Number(b.dataset.entry));if(b.dataset.kanjiReading!==undefined&&category==='characters'){e.preventDefault();speak(b.dataset.kanjiReading);}if(b.dataset.listen!==undefined){e.preventDefault();const entry=window.LESSONS[category]?.[level]?.[Number(b.dataset.listen)];if(entry)speak(entry[b.dataset.part==='example'?4:0]);}if(b.hasAttribute('data-retry-posts')){loadPosts(true);render(false);}});
 document.addEventListener('submit',e=>{if(e.target.id==='contact-form'){e.preventDefault();submitContact(e.target);}});
 document.addEventListener('input',e=>{if(e.target.closest('#contact-form'))e.target.setCustomValidity('');});
 document.addEventListener('error',e=>{if(e.target.matches?.('.video-thumbnail img'))e.target.hidden=true;},true);
