@@ -95,13 +95,33 @@ function toggleArticleTranslation(button){
 }
 function remoteStatus(){return postsStatus==='error'?'<p class="load-notice" role="status">最新の記事を取得できませんでした。<br>Could not load the latest posts. / 暂时无法获取最新文章。 <button type="button" data-retry-posts>再読み込み / Retry / 重试</button></p>':postsStatus==='loading'?'<p class="load-notice" role="status">Loading latest posts… / 正在读取最新文章…</p>':'';}
 let guideLanguage='ja';
+let pronunciationLanguage='ja';
+function renderPronunciationGuide(open=false){
+ const labels={ja:'日本語',en:'English',zh:'中文'};
+ const data=window.PRONUNCIATION_GUIDE;
+ return `<details id="pronunciation-guide" class="reading-guide-box pronunciation-guide" ${open?'open':''}><summary><span>${jp('{発音|はつおん}ルール：「せんせい」は「せんせえ」と{聞|き}こえる')}</span><span class="guide-expand" aria-hidden="true">＋</span></summary><div class="reading-guide-body"><div class="guide-language-buttons" role="group" aria-label="言語 / Language / 语言">${Object.entries(labels).map(([lang,label])=>`<button type="button" id="pronunciation-button-${lang}" data-pronunciation-language="${lang}" aria-pressed="${lang===pronunciationLanguage}" aria-controls="pronunciation-panel-${lang}" lang="${lang==='zh'?'zh-Hans':lang}">${label}</button>`).join('')}</div>${Object.keys(labels).map(lang=>{
+  const article=data[lang];
+  const text=value=>(lang==='ja'?jp(value):esc(value)).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  return `<section id="pronunciation-panel-${lang}" class="guide-language-panel" lang="${lang==='zh'?'zh-Hans':lang}" aria-labelledby="pronunciation-button-${lang}" ${lang===pronunciationLanguage?'':'hidden'}><h3>${text(article.title)}</h3>${article.intro.map(p=>`<p>${text(p)}</p>`).join('')}<h4>${text(article.examplesTitle)}</h4><div class="pronunciation-table-wrap"><table><thead><tr>${article.headers.map(h=>`<th scope="col">${text(h)}</th>`).join('')}</tr></thead><tbody>${data.examples.map(row=>`<tr><td lang="ja">${esc(row[0])}</td><td lang="ja">${esc(row[1])}</td><td lang="${lang==='zh'?'zh-Hans':'en'}">${esc(row[lang==='zh'?3:2])}</td></tr>`).join('')}</tbody></table></div>${article.after.map(p=>`<p>${text(p)}</p>`).join('')}<ul>${article.comparison.map(p=>`<li>${text(p)}</li>`).join('')}</ul><p>${text(article.closing)}</p></section>`;
+ }).join('')}</div></details>`;
+}
+function selectPronunciationLanguage(lang){
+ if(!['ja','en','zh'].includes(lang))return;
+ pronunciationLanguage=lang;
+ $('pronunciation-guide').querySelectorAll('[data-pronunciation-language]').forEach(button=>{
+  const active=button.dataset.pronunciationLanguage===lang;
+  button.setAttribute('aria-pressed',String(active));
+  $(button.getAttribute('aria-controls')).hidden=!active;
+ });
+}
 function renderReadingGuide(){
  const host=$('reading-guide');
  host.hidden=category!=='materials'||level!=='ondoku';
  if(host.hidden)return;
  const open=host.querySelector('details')?.open||false;
+ const pronunciationOpen=host.querySelector('#pronunciation-guide')?.open||false;
  const labels={ja:'日本語',en:'English',zh:'中文'};
- host.innerHTML=`<details class="reading-guide-box" ${open?'open':''}><summary><span>${jp('{音読|おんどく}のポイント')}</span><span class="guide-expand" aria-hidden="true">＋</span></summary><div class="reading-guide-body"><div class="guide-language-buttons" role="group" aria-label="言語 / Language / 语言">${Object.entries(labels).map(([lang,label])=>`<button type="button" id="guide-button-${lang}" data-guide-language="${lang}" aria-pressed="${lang===guideLanguage}" aria-controls="guide-panel-${lang}" lang="${lang==='zh'?'zh-Hans':lang}">${label}</button>`).join('')}</div>${Object.entries(window.READING_GUIDE).map(([lang,guide])=>{const text=value=>lang==='ja'?jp(value):esc(value);return `<section id="guide-panel-${lang}" class="guide-language-panel" lang="${lang==='zh'?'zh-Hans':lang}" aria-labelledby="guide-button-${lang}" ${lang===guideLanguage?'':'hidden'}><h3>${text(guide.title)}</h3>${guide.tips.map((tip,i)=>`<section class="guide-tip"><h4>${String.fromCharCode(0x2460+i)}${text(tip.title)}</h4><p>${text(tip.body)}</p></section>`).join('')}<p class="guide-closing">${text(guide.closing)}</p></section>`;}).join('')}</div></details>`;
+ host.innerHTML=`<div class="read-aloud-note"><p>${jp('{名前|なまえ}や{内容|ないよう}を{自分|じぶん}に{合|あ}わせて、{声|こえ}に{出|だ}して{読|よ}みましょう。')}</p>${tr('These are model texts. Adapt the details to yourself and read aloud.','以下是示范短文。请根据自己的情况修改内容，并朗读出来。')}</div><details class="reading-guide-box" ${open?'open':''}><summary><span>${jp('{音読|おんどく}のポイント')}</span><span class="guide-expand" aria-hidden="true">＋</span></summary><div class="reading-guide-body"><div class="guide-language-buttons" role="group" aria-label="言語 / Language / 语言">${Object.entries(labels).map(([lang,label])=>`<button type="button" id="guide-button-${lang}" data-guide-language="${lang}" aria-pressed="${lang===guideLanguage}" aria-controls="guide-panel-${lang}" lang="${lang==='zh'?'zh-Hans':lang}">${label}</button>`).join('')}</div>${Object.entries(window.READING_GUIDE).map(([lang,guide])=>{const text=value=>lang==='ja'?jp(value):esc(value);return `<section id="guide-panel-${lang}" class="guide-language-panel" lang="${lang==='zh'?'zh-Hans':lang}" aria-labelledby="guide-button-${lang}" ${lang===guideLanguage?'':'hidden'}><h3>${text(guide.title)}</h3>${guide.tips.map((tip,i)=>`<section class="guide-tip"><h4>${String.fromCharCode(0x2460+i)}${text(tip.title)}</h4><p>${text(tip.body)}</p></section>`).join('')}<p class="guide-closing">${text(guide.closing)}</p></section>`;}).join('')}</div></details>${renderPronunciationGuide(pronunciationOpen)}`;
 }
 function selectGuideLanguage(lang){
  if(!['ja','en','zh'].includes(lang))return;
@@ -112,13 +132,18 @@ function selectGuideLanguage(lang){
   $(button.getAttribute('aria-controls')).hidden=!active;
  });
 }
+function playReadingLesson(id){
+ if(category!=='materials'||level!=='ondoku')return;
+ const lesson=window.READ_ALOUD.find(entry=>entry.id===id);
+ if(lesson)speak(lesson.ja);
+}
 function renderReadAloud(){
  const lessons=window.READ_ALOUD;
  $('content').className='grid read-aloud-list';
  $('count').textContent=`${lessons.length} topics / テーマ / 个主题`;
  $('section-title').innerHTML=`${jp('{初級|しょきゅう}')} / Beginner / 初级`;
  $('hint').textContent='＋で教材を開く / Expand to read / 点击展开教材';
- $('content').innerHTML=`<div class="read-aloud-intro"><h3>${jp('{自己紹介|じこしょうかい}をしてみよう')}</h3>${tr('Let’s introduce ourselves.','试着做自我介绍吧。')}<p>${jp('{名前|なまえ}や{内容|ないよう}を{自分|じぶん}に{合|あ}わせて、{声|こえ}に{出|だ}して{読|よ}みましょう。')}</p>${tr('These are model texts. Adapt the details to yourself and read aloud.','以下是示范短文。请根据自己的情况修改内容，并朗读出来。')}</div>`+lessons.map((lesson,i)=>`<details class="reading-lesson" name="read-aloud-lessons"><summary><span class="reading-lesson-title">${jp(lesson.title)}</span><span class="reading-expand" aria-hidden="true">＋</span></summary><div class="reading-lesson-body"><section class="reading-text"><h4>本文 / Text / 正文</h4>${paragraphs(lesson.ja,'ja')}</section>${articleTranslations({en:lesson.enTitle+'\n\n'+lesson.en,zh:lesson.zhTitle+'\n\n'+lesson.zh},'ondoku-'+lesson.id)}<section class="reading-vocabulary"><h4>${jp('{単語|たんご}')} / Vocabulary / 单词</h4><table><caption class="visually-hidden">${esc(plain(lesson.title))} — Vocabulary / 单词</caption><thead><tr><th scope="col">日本語</th><th scope="col" lang="en">English</th><th scope="col" lang="zh-Hans">中文</th></tr></thead><tbody>${lesson.vocabulary.map(word=>`<tr><th scope="row" lang="ja">${jp(word.word)}</th><td lang="en">${esc(word.en)}</td><td lang="zh-Hans">${esc(word.zh)}</td></tr>`).join('')}</tbody></table></section></div></details>`).join('');
+ $('content').innerHTML=`<div class="read-aloud-intro"><h3>${jp('{自己紹介|じこしょうかい}をしてみよう')}</h3>${tr('Let’s introduce ourselves.','试着做自我介绍吧。')}</div>`+lessons.map((lesson,i)=>`<details class="reading-lesson" name="read-aloud-lessons"><summary><span class="reading-lesson-title">${jp(lesson.title)}</span><span class="reading-title-translations"><span lang="en">${esc(lesson.enTitle)}</span><span lang="zh-Hans">${esc(lesson.zhTitle)}</span></span><span class="reading-expand" aria-hidden="true">＋</span></summary><div class="reading-lesson-body"><section class="reading-text"><div class="reading-text-header"><h4>本文 / Text / 正文</h4><div class="reading-audio-controls"><button type="button" class="play-button" data-reading-audio="${esc(lesson.id)}" aria-label="${esc(plain(lesson.title))}：本文を聞く / Listen / 听朗读">♪ Listen / 听朗读</button><button type="button" class="play-button secondary" data-reading-stop>停止 / Stop / 停止</button></div></div>${paragraphs(lesson.ja,'ja')}</section>${articleTranslations({en:lesson.enTitle+'\n\n'+lesson.en,zh:lesson.zhTitle+'\n\n'+lesson.zh},'ondoku-'+lesson.id)}<section class="reading-vocabulary"><h4>${jp('{単語|たんご}')} / Vocabulary / 单词</h4><table><caption class="visually-hidden">${esc(plain(lesson.title))} — Vocabulary / 单词</caption><thead><tr><th scope="col">日本語</th><th scope="col" lang="en">English</th><th scope="col" lang="zh-Hans">中文</th></tr></thead><tbody>${lesson.vocabulary.map(word=>`<tr><th scope="row" lang="ja">${jp(word.word)}</th><td lang="en">${esc(word.en)}</td><td lang="zh-Hans">${esc(word.zh)}</td></tr>`).join('')}</tbody></table></section></div></details>`).join('');
 }
 function isPostPage(){return ['home','news'].includes(category)||(category==='materials'&&level!=='ondoku');}
 function renderArticles(kind){if(kind==='materials'&&level==='ondoku'){renderReadAloud();return;}const items=articles[kind].filter(a=>kind!=='materials'||a.level===level);$('count').textContent=`${items.length} articles / 篇`;$('hint').textContent='';
@@ -178,7 +203,7 @@ function render(load=true){const c=categories[category];document.body.classList.
  if(load&&isPostPage()&&postsStatus==='idle')loadPosts();
 }
 window.addEventListener('hashchange',()=>{stop();$('detail').close();selected=null;readHash();render();});
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(['pos','kana'].includes(b.dataset.vocabSort)){stop();setPrefs('vocabSort',b.dataset.vocabSort);}if(b.dataset.guideLanguage!==undefined)selectGuideLanguage(b.dataset.guideLanguage);if(b.dataset.articleTranslation!==undefined)toggleArticleTranslation(b);if(b.dataset.level)navigate(category,b.dataset.level);if(b.dataset.playVideo!==undefined)playVideo(b);if(b.dataset.entry!==undefined)showCharacter(Number(b.dataset.entry));if(b.dataset.kanjiReading!==undefined&&category==='characters'){e.preventDefault();speak(b.dataset.kanjiReading);}if(b.dataset.listen!==undefined){e.preventDefault();const entry=window.LESSONS[category]?.[level]?.[Number(b.dataset.listen)];if(entry)speak(entry[b.dataset.part==='example'?4:0]);}if(b.hasAttribute('data-retry-posts')){loadPosts(true);render(false);}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(['pos','kana'].includes(b.dataset.vocabSort)){stop();setPrefs('vocabSort',b.dataset.vocabSort);}if(b.dataset.readingAudio!==undefined)playReadingLesson(b.dataset.readingAudio);if(b.hasAttribute('data-reading-stop'))stop();if(b.dataset.guideLanguage!==undefined)selectGuideLanguage(b.dataset.guideLanguage);if(b.dataset.pronunciationLanguage!==undefined)selectPronunciationLanguage(b.dataset.pronunciationLanguage);if(b.dataset.articleTranslation!==undefined)toggleArticleTranslation(b);if(b.dataset.level)navigate(category,b.dataset.level);if(b.dataset.playVideo!==undefined)playVideo(b);if(b.dataset.entry!==undefined)showCharacter(Number(b.dataset.entry));if(b.dataset.kanjiReading!==undefined&&category==='characters'){e.preventDefault();speak(b.dataset.kanjiReading);}if(b.dataset.listen!==undefined){e.preventDefault();const entry=window.LESSONS[category]?.[level]?.[Number(b.dataset.listen)];if(entry)speak(entry[b.dataset.part==='example'?4:0]);}if(b.hasAttribute('data-retry-posts')){loadPosts(true);render(false);}});
 document.addEventListener('submit',e=>{if(e.target.id==='contact-form'){e.preventDefault();submitContact(e.target);}});
 document.addEventListener('input',e=>{if(e.target.closest('#contact-form'))e.target.setCustomValidity('');});
 document.addEventListener('error',e=>{if(e.target.matches?.('.video-thumbnail img'))e.target.hidden=true;},true);
