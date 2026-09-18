@@ -107,7 +107,6 @@ GitHub Pagesの設定：**Deploy from a branch → main → /docs**。
 - ひらがな・カタカナそれぞれ清音46文字、濁音・半濁音25文字。
 - 一覧から選ぶと音声、例語の英中訳、書き順アニメーションを表示。
 - 「書く」では指・マウスでなぞり書きし、「戻す」「消す」が利用できます。自動採点は行いません。
-- 「復習」は読みを思い出して答えを表示し、自分で「読めた／もう一度」を選ぶカードです。点数はその画面の利用中のみ保持されます。
 - 音声は端末の日本語音声合成を利用します。音声再生には対応ブラウザーと日本語音声が必要です。
 - 内容：`docs/kana-data.js`、画面・練習処理：`docs/kana.js`。
 - `docs/kana-strokes.js` は [KanjiVG](https://kanjivg.tagaini.net/) の筆順パスを抽出したものです。© Ulrich Apel and contributors、[CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)。抽出データにも同ライセンスを適用し、練習画面に帰属表示を掲載しています。
