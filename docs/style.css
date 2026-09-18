@@ -237,3 +237,56 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .pronunciation-guide th{background:var(--pink);font-weight:500}
 .pronunciation-guide td[lang=ja]{white-space:nowrap}
 @media(max-width:600px){.pronunciation-guide table{font-size:14px}.pronunciation-guide th,.pronunciation-guide td{padding:9px 7px}}
+
+/* Characters > Hiragana, Katakana, Kanji */
+.character-types[hidden]{display:none}
+.character-types{display:flex;gap:12px;margin:0 0 26px}
+.character-types a{flex:1;text-align:center;padding:16px 10px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--muted);background:white;font-size:22px}
+.character-types a small{display:block;font-size:13px;line-height:1.7}
+.character-types a[aria-current=page]{background:var(--accent);border-color:var(--accent);color:white}
+.kana-content{display:block;min-width:0}
+.kana-widget{max-width:1050px;margin:0 auto}
+.kana-widget button{font:inherit;border:1px solid var(--line);border-radius:10px;background:white;color:var(--deep);min-height:44px;padding:10px 16px;cursor:pointer}
+.kana-widget button:disabled{opacity:.4;cursor:default}
+.kana-widget button:focus-visible,.character-types a:focus-visible{outline:3px solid #7445ad;outline-offset:3px}
+.kana-widget button[aria-pressed=true]{background:var(--accent);color:white;border-color:var(--accent)}
+.kana-group-tabs,.kana-mode-tabs{display:flex;gap:10px;margin-bottom:20px}
+.kana-group-tabs button,.kana-mode-tabs button{flex:1}
+.kana-group-tabs small,.kana-mode-tabs small{display:block;font-size:12px;line-height:1.6}
+.kana-chart{border:1px solid var(--line);border-radius:14px;padding:18px 22px;background:white;margin-bottom:30px}
+.kana-chart summary{cursor:pointer;font-size:20px;line-height:1.8}
+.kana-chart-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:14px}
+.kana-vowel{text-align:center;color:var(--muted)}
+.kana-chart-grid button{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px;min-height:72px}
+.kana-chart-grid button span{font-size:30px;line-height:1.4}
+.kana-chart-grid button small{font-size:12px}
+.kana-study{scroll-margin-top:170px;border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--pink)}
+.kana-progress{text-align:right;font-size:13px;color:var(--muted);margin:0 0 12px}
+.kana-study-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.kana-flashcard,.kana-write-model,.kana-drawing{background:white;border:1px solid var(--line);border-radius:12px;text-align:center;padding:20px;min-width:0}
+.kana-large{display:block;font-size:100px;line-height:1.4}
+.kana-romaji{display:block;color:var(--accent);font-size:21px;margin:0 0 15px}
+.kana-example{border-top:1px solid var(--line);margin-top:20px;padding-top:12px}
+.kana-example p{margin:5px 0;font-size:15px}
+.kana-example .kana-example-word{font-size:26px}
+.kana-example button{margin-top:12px}
+.kana-write-model h3,.kana-drawing h3{font-size:16px;font-weight:500;margin:0 0 14px}
+.kana-strokes{display:block;width:100%;height:auto;aspect-ratio:1/1;max-width:310px;margin:0 auto 16px;border:1px solid var(--line);border-radius:8px;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.kana-guide-line{stroke:#ecdde3;stroke-width:.4;stroke-dasharray:2 2}
+.kana-stroke-ghost{stroke:#eee5e9;stroke-width:3}
+.kana-stroke-active{stroke:#453a40;stroke-width:3}
+.kana-stroke-number{font-size:7px;fill:var(--accent);stroke:none}
+.kana-stroke-count{font-size:13px;min-height:20px;color:var(--muted)}
+.kana-canvas-wrap{position:relative;width:100%;max-width:310px;aspect-ratio:1/1;margin:0 auto 16px}
+.kana-canvas-wrap .kana-strokes{margin:0}
+.kana-canvas-wrap canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.kana-drawing-actions,.kana-pager,.kana-quiz-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.kana-drawing p{font-size:12px;color:var(--muted);line-height:1.7}
+.kana-pager{margin-top:22px;justify-content:space-between}
+.kana-attribution{font-size:11px;line-height:1.8;color:var(--muted);margin:24px 0 0}
+.kana-attribution a{color:inherit}
+.kana-quiz{text-align:center;background:white;border:1px solid var(--line);border-radius:12px;padding:24px 12px}
+.kana-answer{min-height:65px;display:flex;align-items:center;justify-content:center;gap:15px}
+.kana-answer strong{font-size:25px;color:var(--accent)}
+.kana-score{color:var(--accent)}
+@media(max-width:600px){.character-types{gap:8px}.character-types a{font-size:19px;padding:12px 5px}.character-types a small{font-size:11px}.kana-chart{padding:14px 10px}.kana-chart-grid{gap:6px}.kana-chart-grid button{min-height:64px}.kana-study{padding:14px 10px}.kana-study-grid{grid-template-columns:minmax(0,1fr)}.kana-widget button{padding:9px 10px}.kana-mode-tabs,.kana-group-tabs{gap:6px}.kana-attribution{overflow-wrap:anywhere}.kana-pager button{font-size:12px}}
