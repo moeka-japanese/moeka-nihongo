@@ -286,3 +286,8 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .kana-attribution{font-size:11px;line-height:1.8;color:var(--muted);margin:24px 0 0}
 .kana-attribution a{color:inherit}
 @media(max-width:600px){.character-types{gap:8px}.character-types a{font-size:19px;padding:12px 5px}.character-types a small{font-size:11px}.kana-chart{padding:14px 10px}.kana-chart-grid{gap:6px}.kana-chart-grid button{min-height:64px}.kana-study{padding:14px 10px}.kana-study-grid{grid-template-columns:minmax(0,1fr)}.kana-widget button{padding:9px 10px}.kana-mode-tabs,.kana-group-tabs{gap:6px}.kana-attribution{overflow-wrap:anywhere}.kana-pager button{font-size:12px}}
+
+/* Contracted kana combinations. */
+.kana-chart-grid.kana-yoon-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.kana-group-tabs button{min-width:0;overflow-wrap:anywhere}
+.kana-example .kana-example-note{font-size:12px;color:var(--muted)}

@@ -779,5 +779,335 @@ window.KANA_LESSONS = [
     "katakanaWord": "ポケット",
     "katakanaEn": "pocket",
     "katakanaZh": "口袋"
+  },
+  {
+    "kana": "きゃ",
+    "romaji": "kya",
+    "word": "きゃく",
+    "en": "guest",
+    "zh": "客人",
+    "katakanaWord": "キャク",
+    "katakanaEn": "guest",
+    "katakanaZh": "客人"
+  },
+  {
+    "kana": "きゅ",
+    "romaji": "kyu",
+    "word": "きゅうり",
+    "en": "cucumber",
+    "zh": "黄瓜",
+    "katakanaWord": "キュウリ",
+    "katakanaEn": "cucumber",
+    "katakanaZh": "黄瓜"
+  },
+  {
+    "kana": "きょ",
+    "romaji": "kyo",
+    "word": "きょう",
+    "en": "today",
+    "zh": "今天",
+    "katakanaWord": "キョウ",
+    "katakanaEn": "today",
+    "katakanaZh": "今天"
+  },
+  {
+    "kana": "しゃ",
+    "romaji": "sha",
+    "word": "しゃしん",
+    "en": "photo",
+    "zh": "照片",
+    "katakanaWord": "シャシン",
+    "katakanaEn": "photo",
+    "katakanaZh": "照片"
+  },
+  {
+    "kana": "しゅ",
+    "romaji": "shu",
+    "word": "しゅくだい",
+    "en": "homework",
+    "zh": "作业",
+    "katakanaWord": "シュクダイ",
+    "katakanaEn": "homework",
+    "katakanaZh": "作业"
+  },
+  {
+    "kana": "しょ",
+    "romaji": "sho",
+    "word": "しょくどう",
+    "en": "dining hall",
+    "zh": "食堂",
+    "katakanaWord": "ショクドウ",
+    "katakanaEn": "dining hall",
+    "katakanaZh": "食堂"
+  },
+  {
+    "kana": "ちゃ",
+    "romaji": "cha",
+    "word": "ちゃわん",
+    "en": "rice bowl",
+    "zh": "饭碗",
+    "katakanaWord": "チャワン",
+    "katakanaEn": "rice bowl",
+    "katakanaZh": "饭碗"
+  },
+  {
+    "kana": "ちゅ",
+    "romaji": "chu",
+    "word": "ちゅうがく",
+    "en": "junior high school",
+    "zh": "初中",
+    "katakanaWord": "チュウガク",
+    "katakanaEn": "junior high school",
+    "katakanaZh": "初中"
+  },
+  {
+    "kana": "ちょ",
+    "romaji": "cho",
+    "word": "ちょきん",
+    "en": "savings",
+    "zh": "储蓄",
+    "katakanaWord": "チョキン",
+    "katakanaEn": "savings",
+    "katakanaZh": "储蓄"
+  },
+  {
+    "kana": "にゃ",
+    "romaji": "nya",
+    "word": "にゃんこ",
+    "en": "kitty",
+    "zh": "小猫",
+    "katakanaWord": "ニャンコ",
+    "katakanaEn": "kitty",
+    "katakanaZh": "小猫"
+  },
+  {
+    "kana": "にゅ",
+    "romaji": "nyu",
+    "word": "にゅうがく",
+    "en": "entering school",
+    "zh": "入学",
+    "katakanaWord": "ニュウガク",
+    "katakanaEn": "entering school",
+    "katakanaZh": "入学"
+  },
+  {
+    "kana": "にょ",
+    "romaji": "nyo",
+    "word": "にょきにょき",
+    "en": "growing upward one after another",
+    "zh": "接连冒出",
+    "katakanaWord": "ニョキニョキ",
+    "katakanaEn": "growing upward one after another",
+    "katakanaZh": "接连冒出"
+  },
+  {
+    "kana": "ひゃ",
+    "romaji": "hya",
+    "word": "ひゃく",
+    "en": "one hundred",
+    "zh": "一百",
+    "katakanaWord": "ヒャク",
+    "katakanaEn": "one hundred",
+    "katakanaZh": "一百"
+  },
+  {
+    "kana": "ひゅ",
+    "romaji": "hyu",
+    "word": "ひゅうひゅう",
+    "en": "whistling wind",
+    "zh": "风呼呼地吹",
+    "katakanaWord": "ヒュウヒュウ",
+    "katakanaEn": "whistling wind",
+    "katakanaZh": "风呼呼地吹"
+  },
+  {
+    "kana": "ひょ",
+    "romaji": "hyo",
+    "word": "ひょう",
+    "en": "leopard",
+    "zh": "豹",
+    "katakanaWord": "ヒョウ",
+    "katakanaEn": "leopard",
+    "katakanaZh": "豹"
+  },
+  {
+    "kana": "みゃ",
+    "romaji": "mya",
+    "word": "みゃく",
+    "en": "pulse",
+    "zh": "脉搏",
+    "katakanaWord": "ミャク",
+    "katakanaEn": "pulse",
+    "katakanaZh": "脉搏"
+  },
+  {
+    "kana": "みゅ",
+    "romaji": "myu",
+    "word": "みゅーじっく",
+    "en": "music",
+    "zh": "音乐",
+    "katakanaWord": "ミュージック",
+    "katakanaEn": "music",
+    "katakanaZh": "音乐"
+  },
+  {
+    "kana": "みょ",
+    "romaji": "myo",
+    "word": "みょうじ",
+    "en": "surname",
+    "zh": "姓氏",
+    "katakanaWord": "ミョウジ",
+    "katakanaEn": "surname",
+    "katakanaZh": "姓氏"
+  },
+  {
+    "kana": "りゃ",
+    "romaji": "rya",
+    "word": "りゃく",
+    "en": "abbreviation",
+    "zh": "省略",
+    "katakanaWord": "リャク",
+    "katakanaEn": "abbreviation",
+    "katakanaZh": "省略"
+  },
+  {
+    "kana": "りゅ",
+    "romaji": "ryu",
+    "word": "りゅうがく",
+    "en": "studying abroad",
+    "zh": "留学",
+    "katakanaWord": "リュウガク",
+    "katakanaEn": "studying abroad",
+    "katakanaZh": "留学"
+  },
+  {
+    "kana": "りょ",
+    "romaji": "ryo",
+    "word": "りょこう",
+    "en": "travel",
+    "zh": "旅行",
+    "katakanaWord": "リョコウ",
+    "katakanaEn": "travel",
+    "katakanaZh": "旅行"
+  },
+  {
+    "kana": "ぎゃ",
+    "romaji": "gya",
+    "word": "ぎゃく",
+    "en": "reverse",
+    "zh": "相反",
+    "katakanaWord": "ギャク",
+    "katakanaEn": "reverse",
+    "katakanaZh": "相反"
+  },
+  {
+    "kana": "ぎゅ",
+    "romaji": "gyu",
+    "word": "ぎゅうにゅう",
+    "en": "milk",
+    "zh": "牛奶",
+    "katakanaWord": "ギュウニュウ",
+    "katakanaEn": "milk",
+    "katakanaZh": "牛奶"
+  },
+  {
+    "kana": "ぎょ",
+    "romaji": "gyo",
+    "word": "ぎょうざ",
+    "en": "gyoza dumplings",
+    "zh": "饺子",
+    "katakanaWord": "ギョウザ",
+    "katakanaEn": "gyoza dumplings",
+    "katakanaZh": "饺子"
+  },
+  {
+    "kana": "じゃ",
+    "romaji": "ja",
+    "word": "じゃがいも",
+    "en": "potato",
+    "zh": "土豆",
+    "katakanaWord": "ジャガイモ",
+    "katakanaEn": "potato",
+    "katakanaZh": "土豆"
+  },
+  {
+    "kana": "じゅ",
+    "romaji": "ju",
+    "word": "じゅぎょう",
+    "en": "class / lesson",
+    "zh": "课",
+    "katakanaWord": "ジュギョウ",
+    "katakanaEn": "class / lesson",
+    "katakanaZh": "课"
+  },
+  {
+    "kana": "じょ",
+    "romaji": "jo",
+    "word": "じょうず",
+    "en": "skillful",
+    "zh": "擅长",
+    "katakanaWord": "ジョウズ",
+    "katakanaEn": "skillful",
+    "katakanaZh": "擅长"
+  },
+  {
+    "kana": "びゃ",
+    "romaji": "bya",
+    "word": "びゃくや",
+    "en": "midnight sun",
+    "zh": "白夜",
+    "katakanaWord": "ビャクヤ",
+    "katakanaEn": "midnight sun",
+    "katakanaZh": "白夜"
+  },
+  {
+    "kana": "びゅ",
+    "romaji": "byu",
+    "word": "びゅうびゅう",
+    "en": "howling wind",
+    "zh": "风呼啸",
+    "katakanaWord": "ビュウビュウ",
+    "katakanaEn": "howling wind",
+    "katakanaZh": "风呼啸"
+  },
+  {
+    "kana": "びょ",
+    "romaji": "byo",
+    "word": "びょういん",
+    "en": "hospital",
+    "zh": "医院",
+    "katakanaWord": "ビョウイン",
+    "katakanaEn": "hospital",
+    "katakanaZh": "医院"
+  },
+  {
+    "kana": "ぴゃ",
+    "romaji": "pya",
+    "word": "ろっぴゃく",
+    "en": "six hundred",
+    "zh": "六百",
+    "katakanaWord": "ロッピャク",
+    "katakanaEn": "six hundred",
+    "katakanaZh": "六百"
+  },
+  {
+    "kana": "ぴゅ",
+    "romaji": "pyu",
+    "word": "ぴゅうぴゅう",
+    "en": "whistling wind",
+    "zh": "风嗖嗖地吹",
+    "katakanaWord": "ピュウピュウ",
+    "katakanaEn": "whistling wind",
+    "katakanaZh": "风嗖嗖地吹"
+  },
+  {
+    "kana": "ぴょ",
+    "romaji": "pyo",
+    "word": "ぴょんぴょん",
+    "en": "hopping",
+    "zh": "蹦蹦跳跳",
+    "katakanaWord": "ピョンピョン",
+    "katakanaEn": "hopping",
+    "katakanaZh": "蹦蹦跳跳"
   }
 ];
