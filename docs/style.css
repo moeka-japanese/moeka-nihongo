@@ -291,3 +291,9 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .kana-chart-grid.kana-yoon-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 .kana-group-tabs button{min-width:0;overflow-wrap:anywhere}
 .kana-example .kana-example-note{font-size:12px;color:var(--muted)}
+
+.songs-playlist{max-width:1100px;width:100%;margin:0 auto}
+.songs-playlist>p{font-size:20px;line-height:1.9}
+.songs-player{margin:24px 0;display:block;border-radius:14px}
+.songs-playlist .channel-link{font-size:14px;overflow-wrap:anywhere}
+

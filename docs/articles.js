@@ -14,7 +14,7 @@ window.ARTICLES = {
  }]
 };
 Object.assign(window.SITE_CONFIG,{
- featuredVideoIds:['OpGdftlZEY0','MrP-c1T7Wts','pgQRhLy8f4Q'],
+ featuredVideoIds:['9wLeXZ591S8','OpGdftlZEY0','GmK0H4NP-eg'],
  repository:'moeka-japanese/moeka-nihongo',
  articleAuthor:'moeka-japanese',
  // Create a Formspree form with your private recipient, then paste only its public /f/ endpoint.
@@ -23,3 +23,4 @@ Object.assign(window.SITE_CONFIG,{
  xUrl:'https://x.com/moeka_happy_',
  rednoteUrl:'https://www.xiaohongshu.com/search_result?keyword=moeka_japanese&type=51'
 });
+

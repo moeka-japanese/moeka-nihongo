@@ -9,7 +9,7 @@ const categories={
  materials:{ja:'{教材|きょうざい}',en:'Materials',zh:'教材',icon:'本'},
  pronunciation:{ja:'{発音|はつおん}',en:'Pronunciation',zh:'发音',icon:'声'},
  characters:{ja:'{文字|もじ}',en:'Characters',zh:'文字',icon:'字'},
- hiragana:{ja:'{五十音|ごじゅうおん}（ひらがな）',en:'Hiragana',zh:'平假名',icon:'あ'},
+ songs:{ja:'{歌|うた}で{覚|おぼ}える',en:'Learn with songs',zh:'唱歌学日语',icon:'♪'},
  news:{ja:'ニュース',en:'News',zh:'最新消息',icon:'新'},
  contact:{ja:'お{問|と}い{合|あ}わせ',en:'Contact',zh:'联系我们',icon:'✉'}
 };
@@ -33,7 +33,7 @@ function speak(text){stop();if(!('speechSynthesis'in window)){notify('Audio is u
  utterance.onerror=e=>{if(token===audioToken&&!['interrupted','canceled'].includes(e.error))notify('Could not play audio. / 播放失败，请重试。');};window.speechSynthesis.speak(utterance);
 }
 function levelsFor(c){if(c==='characters')return ['hiragana','katakana','N5','N4','N3','N2','N1'];if(c==='materials')return ['N5','N4','N3','N2','N1','ondoku'];if(window.LESSONS[c])return Object.keys(window.LESSONS[c]);if(window.VIDEOS[c])return Object.keys(window.VIDEOS[c]);return ['all'];}
-function readHash(){let [c,l,id]=location.hash.slice(1).split('/');if(c==='characters'&&l==='kanji'){l=['N5','N4','N3','N2','N1'].includes(id)?id:'N5';id='';}category=Object.hasOwn(categories,c)?c:'home';level=levelsFor(category).includes(l)?l:levelsFor(category)[0];articleId=id||'';}
+function readHash(){let [c,l,id]=location.hash.slice(1).split('/');if(c==='hiragana'){c='songs';l='all';id='';history.replaceState(null,'','#songs');}if(c==='characters'&&l==='kanji'){l=['N5','N4','N3','N2','N1'].includes(id)?id:'N5';id='';}category=Object.hasOwn(categories,c)?c:'home';level=levelsFor(category).includes(l)?l:levelsFor(category)[0];articleId=id||'';}
 function navigate(c,l,id=''){if(!Object.hasOwn(categories,c)||!levelsFor(c).includes(l))throw Error('Invalid category or level');stop();$('detail').close();selected=null;category=c;level=l;articleId=id;history.replaceState(null,'',`#${c}${c==='characters'&&/^N[1-5]$/.test(l)?'/kanji/'+l:l==='all'&&!id?'':'/'+l}${id?'/'+id:''}`);render();}
 function setPrefs(key,value){prefs[key]=value;try{localStorage.setItem('moeka-reading',JSON.stringify(prefs));}catch{}render();}
 function validVideoId(id){return typeof id==='string'&&/^[A-Za-z0-9_-]{11}$/.test(id);}
@@ -150,6 +150,11 @@ function renderArticles(kind){if(kind==='materials'&&level==='ondoku'){renderRea
  if(articleId){const a=articles[kind].find(a=>a.id===articleId&&(kind!=='materials'||a.level===level));$('content').innerHTML=a?articleBody(a,kind):`<div class="video-empty"><p>${postsStatus==='loading'?'Loading article… / 正在读取文章…':'記事が見つかりません。 / Article not found. / 未找到文章。'}</p></div>${remoteStatus()}`;return;}
  $('content').innerHTML=`${remoteStatus()}${items.length?items.map(a=>articleCard(a,kind)).join(''):'<div class="video-empty"><p>記事は準備中です。<br>Articles are coming soon. / 文章正在准备中。</p></div>'}`;
 }
+
+function renderSongs(){
+ $('content').innerHTML=`<section class="songs-playlist"><p>歌を聞いて、いっしょに歌いながら日本語を覚えましょう。</p>${tr('Listen and sing along to learn Japanese. Choose a video from the playlist in the player.','听歌、跟唱，一起学习日语。可在播放器的播放列表中选择视频。')}<iframe class="youtube-player songs-player" src="https://www.youtube.com/embed/GmK0H4NP-eg?list=PLTJL9XeS-0ms&playsinline=1&rel=0" title="歌で覚える / Learn with songs / 唱歌学日语" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><a class="channel-link" href="https://www.youtube.com/watch?v=GmK0H4NP-eg&amp;list=PLTJL9XeS-0ms" target="_blank" rel="noopener noreferrer">YouTubeで再生リストを開く / Open playlist / 打开播放列表 ↗</a></section>`;
+}
+
 function renderHome(){const videos=featuredVideos();$('content').innerHTML=`<section class="home-featured" aria-label="Recommended videos"><div class="home-section-title"><h2>おすすめの動画</h2><span>Featured videos / 推荐视频</span></div><div class="home-video-grid">${videos.map((e,i)=>videoThumbnail(e,`featured-${i}`)).join('')}</div></section><section class="home-news"><div class="home-section-title"><h2>ニュース</h2><a href="#news">すべて見る / View all / 查看全部 →</a></div>${remoteStatus()}<div class="news-list">${articles.news.slice(0,3).map(a=>articleCard(a,'news')).join('')||'<p>ニュースは準備中です。 / News is coming soon. / 最新消息正在准备中。</p>'}</div></section>`;}
 function formEndpoint(){return /^https:\/\/formspree\.io\/f\/[a-zA-Z0-9]+$/.test(config.contactEndpoint||'')?config.contactEndpoint:'';}
 function renderContact(){const ready=Boolean(formEndpoint());$('content').innerHTML=`<div class="contact-panel"><p>お名前・メールアドレス・お問い合わせ内容を入力してください。</p>${tr('Please enter your name, email address and message.','请填写您的姓名、电子邮箱和咨询内容。')}${!ready?'<p class="contact-unavailable" role="status">フォームは準備中のため、まだ送信できません。<br>This form is not accepting messages yet. / 表单尚未开放，暂时无法发送。</p>':''}<form id="contact-form"><label for="contact-name">お名前 / Name / 姓名 <span class="required">必須 / Required</span></label><input id="contact-name" name="name" autocomplete="name" required maxlength="100"><label for="contact-email">メールアドレス / Email / 电子邮箱 <span class="required">必須 / Required</span></label><input id="contact-email" name="email" type="email" autocomplete="email" required maxlength="254"><label for="contact-message">お問い合わせ内容 / Message / 咨询内容 <span class="required">必須 / Required</span></label><textarea id="contact-message" name="message" required rows="7" maxlength="5000"></textarea><div class="honeypot" aria-hidden="true"><label>Leave empty<input name="_gotcha" tabindex="-1" autocomplete="off"></label></div><p class="contact-note">いただいた情報は、お問い合わせへの返信に使用します。<br>Your details will be used to reply to your message.<br>您提供的信息将用于回复咨询。</p><button class="play-button" type="submit" ${!ready?'disabled':''}>送信 / Send / 发送</button><p id="contact-result" role="status" aria-live="polite"></p></form></div>`;}
@@ -183,7 +188,7 @@ function renderNavigation(){
  const key=[category,prefs.script,prefs.furigana].join(':');
  if(key===navigationKey)return;
  navigationKey=key;
- const markup=Object.entries(categories).map(([id,c])=>`<a class="nav-item ${id===category?'active':''}" href="#${id}${id==='hiragana'?'/all':''}" ${id===category?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${c.icon}</span><span class="nav-label"><strong>${jp(c.ja)}</strong><small><span lang="en">${c.en}</span><span class="nav-language-divider" aria-hidden="true"> / </span><span lang="zh-Hans">${c.zh}</span></small></span></a>`).join('');
+ const markup=Object.entries(categories).map(([id,c])=>`<a class="nav-item ${id===category?'active':''}" href="#${id}" ${id===category?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${c.icon}</span><span class="nav-label"><strong>${jp(c.ja)}</strong><small><span lang="en">${c.en}</span><span class="nav-language-divider" aria-hidden="true"> / </span><span lang="zh-Hans">${c.zh}</span></small></span></a>`).join('');
  $('nav').innerHTML=markup;
  $('mobile-nav').innerHTML=markup;
  alignMobileNavigation();
@@ -199,10 +204,10 @@ function render(load=true){window.KanaPractice.destroy();const c=categories[cate
  $('page-title').innerHTML=category==='home'?'MOEKA NIHONGO':`${jp(c.ja)}<span lang="en">${c.en}</span>`;
  $('page-subtitle').textContent=category==='home'?'いっしょに、日本語。 / Learn Japanese together. / 一起学日语。':`${c.en} / ${c.zh}`;
  const ls=category==='characters'?(kanaPage?[]:['N5','N4','N3','N2','N1']):levelsFor(category);$('levels').innerHTML=ls.length>1?ls.map(l=>`<button type="button" class="level" data-level="${l}" aria-pressed="${l===level}">${esc(levelLabels[l])}</button>`).join(''):'';$('levels').hidden=ls.length<=1;
- $('level-row').hidden=kanaPage||['home','contact'].includes(category);$('section-caption').hidden=kanaPage||['home','contact'].includes(category);$('section-title').innerHTML=ls.length>1?`${esc(levelLabels[level])} / ${jp(c.ja)}`:jp(c.ja);$('count').textContent='';$('hint').textContent='';
- $('content').className='grid'+(['vocabulary','grammar'].includes(category)?' accordion-list':category==='hiragana'?' hiragana-videos':['home','contact'].includes(category)?' page-stack':['materials','news'].includes(category)?(articleId?' page-stack':category==='materials'?' materials-list':' article-grid'):'');
+ $('level-row').hidden=kanaPage||['home','contact','songs'].includes(category);$('section-caption').hidden=kanaPage||['home','contact'].includes(category);$('section-title').innerHTML=ls.length>1?`${esc(levelLabels[level])} / ${jp(c.ja)}`:jp(c.ja);$('count').textContent='';$('hint').textContent='';
+ $('content').className='grid'+(['vocabulary','grammar'].includes(category)?' accordion-list':['home','contact'].includes(category)?' page-stack':['materials','news'].includes(category)?(articleId?' page-stack':category==='materials'?' materials-list':' article-grid'):'');
  if(category==='characters'&&!kanaPage)$('section-title').innerHTML=`${esc(level)} / ${jp('{漢字|かんじ}')} / Kanji / 汉字`;
- if(kanaPage)window.KanaPractice.mount($('content'),level,{speak,stop});else if(category==='home')renderHome();else if(category==='contact')renderContact();else if(['materials','news'].includes(category))renderArticles(category);else if(window.VIDEOS[category])renderVideos();else renderLessons();
+ if(kanaPage)window.KanaPractice.mount($('content'),level,{speak,stop});else if(category==='songs')renderSongs();else if(category==='home')renderHome();else if(category==='contact')renderContact();else if(['materials','news'].includes(category))renderArticles(category);else if(window.VIDEOS[category])renderVideos();else renderLessons();
  if(load&&isPostPage()&&postsStatus==='idle')loadPosts();
 }
 window.addEventListener('hashchange',()=>{stop();$('detail').close();selected=null;readHash();render();});
@@ -218,3 +223,4 @@ $('social-links').innerHTML=`<a href="${esc(config.youtubeChannel)}" target="_bl
 readHash();render();
 if(document.modelContext?.registerTool){const life=new AbortController();try{Promise.resolve(document.modelContext.registerTool({name:'navigate_japanese_lessons',title:'Choose Japanese lessons',description:'Open a site section and level without playing audio.',inputSchema:{type:'object',properties:{category:{type:'string',enum:Object.keys(categories)},level:{type:'string',enum:Object.keys(levelLabels)}},required:['category','level'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){if(!input||typeof input.category!=='string'||typeof input.level!=='string')throw Error('Category and level are required');navigate(input.category,input.level);return{category,level};}},{signal:life.signal})).catch(()=>{});}catch{}window.addEventListener('pagehide',()=>life.abort(),{once:true});}
 })();
+
