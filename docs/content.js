@@ -108,7 +108,7 @@ window.VIDEOS = {
   {title:'たちつてと',en:'Hiragana Song: TA CHI TSU TE TO',zh:'平假名歌曲：たちつてと',youtubeId:'Df1iS8_60eY',captions:[]},
   {title:'なにぬねの',en:'Hiragana Song: NA NI NU NE NO',zh:'平假名歌曲：なにぬねの',youtubeId:'1DeK_8Gvs1E',captions:[]}
  ]},
- listening:{beginner:[],intermediate:[],advanced:[]},
+ listening:{beginner:[],intermediate:[],advanced:[],podcast:[{title:'{朝|あさ}、{窓|まど}を{開|あ}けたときのこと',youtubeId:'9wLeXZ591S8'}]},
  speaking:{beginner:[],intermediate:[],advanced:[]},
  pronunciation:{beginner:[],intermediate:[],advanced:[]}
 };

@@ -297,3 +297,10 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .songs-player{margin:24px 0;display:block;border-radius:14px}
 .songs-playlist .channel-link{font-size:14px;overflow-wrap:anywhere}
 
+
+.grid.podcast-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.podcast-card{display:flex;flex-direction:column;align-items:flex-start;padding:24px;border:1px solid var(--line);border-radius:14px;background:white;min-width:0}
+.podcast-card h3{font-size:21px;font-weight:500;line-height:1.9;margin:0 0 18px;overflow-wrap:anywhere}
+.podcast-card a{margin-top:auto;font-size:15px}
+@media(max-width:720px){.grid.podcast-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.podcast-card{padding:18px}}
+@media(max-width:480px){.grid.podcast-grid{grid-template-columns:minmax(0,1fr)}}
