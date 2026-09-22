@@ -13,7 +13,7 @@ const categories={
  news:{ja:'ニュース',en:'News',zh:'最新消息',icon:'新'},
  contact:{ja:'お{問|と}い{合|あ}わせ',en:'Contact',zh:'联系我们',icon:'✉'}
 };
-const levelLabels={podcast:'Podcast',hiragana:'ひらがな',katakana:'カタカナ',N5:'N5',N4:'N4',N3:'N3',N2:'N2',N1:'N1',ondoku:'音読 / Read aloud / 朗读',beginner:'初級 · Beginner',intermediate:'中級 · Intermediate',advanced:'上級 · Advanced',all:'All / 全部'};
+const levelLabels={keigo:'敬語クイズ',podcast:'Podcast',hiragana:'ひらがな',katakana:'カタカナ',N5:'N5',N4:'N4',N3:'N3',N2:'N2',N1:'N1',ondoku:'音読 / Read aloud / 朗读',beginner:'初級 · Beginner',intermediate:'中級 · Intermediate',advanced:'上級 · Advanced',all:'All / 全部'};
 const $=id=>document.getElementById(id), config=window.SITE_CONFIG;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=s=>String(s??'').replace(/\{([^|{}]+)\|([^{}]+)\}/g,'$1');
@@ -32,7 +32,7 @@ function speak(text){stop();if(!('speechSynthesis'in window)){notify('Audio is u
  const token=audioToken;utterance=new SpeechSynthesisUtterance(plain(text));utterance.lang='ja-JP';utterance.rate=.85;if(voice)utterance.voice=voice;
  utterance.onerror=e=>{if(token===audioToken&&!['interrupted','canceled'].includes(e.error))notify('Could not play audio. / 播放失败，请重试。');};window.speechSynthesis.speak(utterance);
 }
-function levelsFor(c){if(c==='characters')return ['hiragana','katakana','N5','N4','N3','N2','N1'];if(c==='materials')return ['N5','N4','N3','N2','N1','ondoku'];if(window.LESSONS[c])return Object.keys(window.LESSONS[c]);if(window.VIDEOS[c])return Object.keys(window.VIDEOS[c]);return ['all'];}
+function levelsFor(c){if(c==='grammar')return [...Object.keys(window.LESSONS.grammar),'keigo'];if(c==='characters')return ['hiragana','katakana','N5','N4','N3','N2','N1'];if(c==='materials')return ['N5','N4','N3','N2','N1','ondoku'];if(window.LESSONS[c])return Object.keys(window.LESSONS[c]);if(window.VIDEOS[c])return Object.keys(window.VIDEOS[c]);return ['all'];}
 function readHash(){let [c,l,id]=location.hash.slice(1).split('/');if(c==='hiragana'){c='songs';l='all';id='';history.replaceState(null,'','#songs');}if(c==='characters'&&l==='kanji'){l=['N5','N4','N3','N2','N1'].includes(id)?id:'N5';id='';}category=Object.hasOwn(categories,c)?c:'home';level=levelsFor(category).includes(l)?l:levelsFor(category)[0];articleId=id||'';}
 function navigate(c,l,id=''){if(!Object.hasOwn(categories,c)||!levelsFor(c).includes(l))throw Error('Invalid category or level');stop();$('detail').close();selected=null;category=c;level=l;articleId=id;history.replaceState(null,'',`#${c}${c==='characters'&&/^N[1-5]$/.test(l)?'/kanji/'+l:l==='all'&&!id?'':'/'+l}${id?'/'+id:''}`);render();}
 function setPrefs(key,value){prefs[key]=value;try{localStorage.setItem('moeka-reading',JSON.stringify(prefs));}catch{}render();}
@@ -194,8 +194,8 @@ function renderNavigation(){
  alignMobileNavigation();
 }
 window.addEventListener('resize',alignMobileNavigation);
-function render(load=true){window.KanaPractice.destroy();const c=categories[category];const kanaPage=category==='characters'&&['hiragana','katakana'].includes(level);document.body.classList.toggle('hide-ruby',!prefs.furigana);$('kanji').setAttribute('aria-pressed',String(prefs.script==='kanji'));$('hiragana').setAttribute('aria-pressed',String(prefs.script==='hiragana'));$('furigana').checked=prefs.furigana;$('furigana').disabled=prefs.script==='hiragana';
- $('reading-tools').hidden=kanaPage||!['vocabulary','grammar','characters','materials'].includes(category);
+function render(load=true){window.KeigoQuiz.unmount($('content'));window.KanaPractice.destroy();const c=categories[category];const kanaPage=category==='characters'&&['hiragana','katakana'].includes(level);document.body.classList.toggle('hide-ruby',!prefs.furigana);$('kanji').setAttribute('aria-pressed',String(prefs.script==='kanji'));$('hiragana').setAttribute('aria-pressed',String(prefs.script==='hiragana'));$('furigana').checked=prefs.furigana;$('furigana').disabled=prefs.script==='hiragana';
+ $('reading-tools').hidden=(category==='grammar'&&level==='keigo')||kanaPage||!['vocabulary','grammar','characters','materials'].includes(category);
  $('character-types').hidden=category!=='characters';
  if(category==='characters')$('character-types').innerHTML=[['hiragana','ひらがな','Hiragana','平假名'],['katakana','カタカナ','Katakana','片假名'],['kanji','漢字','Kanji','汉字']].map(([id,ja,en,zh])=>`<a href="#characters/${id}${id==='kanji'?'/N5':''}" ${id===(kanaPage?level:'kanji')?'aria-current="page"':''}>${ja}<small lang="en">${en}</small><small lang="zh-Hans">${zh}</small></a>`).join('');
  $('vocabulary-tools').hidden=category!=='vocabulary';document.querySelectorAll('[data-vocab-sort]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.vocabSort===prefs.vocabSort)));
@@ -207,7 +207,7 @@ function render(load=true){window.KanaPractice.destroy();const c=categories[cate
  $('level-row').hidden=kanaPage||['home','contact','songs'].includes(category);$('section-caption').hidden=kanaPage||['home','contact'].includes(category);$('section-title').innerHTML=ls.length>1?`${esc(levelLabels[level])} / ${jp(c.ja)}`:jp(c.ja);$('count').textContent='';$('hint').textContent='';
  $('content').className='grid'+(['vocabulary','grammar'].includes(category)?' accordion-list':['home','contact'].includes(category)?' page-stack':['materials','news'].includes(category)?(articleId?' page-stack':category==='materials'?' materials-list':' article-grid'):'');
  if(category==='characters'&&!kanaPage)$('section-title').innerHTML=`${esc(level)} / ${jp('{漢字|かんじ}')} / Kanji / 汉字`;
- if(kanaPage)window.KanaPractice.mount($('content'),level,{speak,stop});else if(category==='songs')renderSongs();else if(category==='home')renderHome();else if(category==='contact')renderContact();else if(['materials','news'].includes(category))renderArticles(category);else if(window.VIDEOS[category])renderVideos();else renderLessons();
+ if(category==='grammar'&&level==='keigo'){$('count').textContent=window.KEIGO_QUIZ.length+' 問';$('section-title').textContent='敬語クイズ';window.KeigoQuiz.mount($('content'));}else if(kanaPage)window.KanaPractice.mount($('content'),level,{speak,stop});else if(category==='songs')renderSongs();else if(category==='home')renderHome();else if(category==='contact')renderContact();else if(['materials','news'].includes(category))renderArticles(category);else if(window.VIDEOS[category])renderVideos();else renderLessons();
  if(load&&isPostPage()&&postsStatus==='idle')loadPosts();
 }
 window.addEventListener('hashchange',()=>{stop();$('detail').close();selected=null;readHash();render();});

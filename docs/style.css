@@ -304,3 +304,25 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .podcast-card a{margin-top:auto;font-size:15px}
 @media(max-width:720px){.grid.podcast-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.podcast-card{padding:18px}}
 @media(max-width:480px){.grid.podcast-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Honorific quiz: Japanese questions and trilingual answer explanations. */
+.keigo-quiz{display:block;max-width:1100px}
+.keigo-intro{margin:0 0 26px;line-height:1.9}
+.keigo-group{margin-bottom:40px}
+.keigo-group>h3{font-size:22px;font-weight:500;line-height:1.8;margin:0 0 18px}
+.keigo-question{padding:24px;margin-bottom:18px;border:1px solid var(--line);border-radius:14px;background:white;min-width:0}
+.keigo-tags{display:flex;gap:8px;flex-wrap:wrap}
+.keigo-question>h4{font-size:21px;font-weight:500;line-height:1.9;margin:16px 0}
+.keigo-choices{display:grid;gap:10px}
+.keigo-choices button{display:flex;gap:12px;width:100%;min-height:48px;padding:13px 16px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--deep);font:inherit;text-align:left;line-height:1.8;overflow-wrap:anywhere}
+.keigo-choices button:hover{background:var(--pink);border-color:var(--accent)}
+.keigo-choices button:focus-visible{outline:3px solid #7445ad;outline-offset:3px}
+.keigo-choices button.is-correct{border:2px solid #397052;background:#f0f8f2}
+.keigo-choices button.is-incorrect{border:2px solid var(--accent);background:var(--pink)}
+.keigo-feedback{margin-top:20px;padding:18px 22px;border-radius:10px;background:var(--pink);line-height:1.9;overflow-wrap:anywhere}
+.keigo-feedback[hidden]{display:none}
+.keigo-feedback h4{font-size:17px;margin:18px 0 8px;color:var(--accent)}
+.keigo-feedback p{margin:0 0 12px}
+.keigo-feedback p:last-child{margin-bottom:0}
+.keigo-feedback p[lang=en],.keigo-feedback p[lang=zh-Hans]{font-size:15px}
+@media(max-width:600px){.keigo-question{padding:17px 14px}.keigo-question>h4{font-size:19px}.keigo-group>h3{font-size:20px}.keigo-feedback{padding:16px}.keigo-choices button{padding:11px 12px}}
