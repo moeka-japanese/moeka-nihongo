@@ -326,3 +326,11 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .keigo-feedback p:last-child{margin-bottom:0}
 .keigo-feedback p[lang=en],.keigo-feedback p[lang=zh-Hans]{font-size:15px}
 @media(max-width:600px){.keigo-question{padding:17px 14px}.keigo-question>h4{font-size:19px}.keigo-group>h3{font-size:20px}.keigo-feedback{padding:16px}.keigo-choices button{padding:11px 12px}}
+
+/* Explain every alternative after answering, including valid but unsuitable wording. */
+.keigo-alternatives{border-top:1px solid var(--line);margin-top:24px;padding-top:2px}
+.keigo-choice-explanation{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:9px;background:white}
+.keigo-choice-explanation.selected-explanation{border-color:var(--accent)}
+.keigo-choice-explanation h5{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 14px;font-size:17px;font-weight:500;line-height:1.8;margin:0 0 12px}
+.keigo-your-choice{font-size:12px;padding:2px 8px;border-radius:5px;color:var(--accent);background:var(--pink)}
+@media(max-width:600px){.keigo-choice-explanation{padding:13px}.keigo-choice-explanation h5{font-size:16px}}
