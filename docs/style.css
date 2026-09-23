@@ -335,23 +335,26 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .keigo-your-choice{font-size:12px;padding:2px 8px;border-radius:5px;color:var(--accent);background:var(--pink)}
 @media(max-width:600px){.keigo-choice-explanation{padding:13px}.keigo-choice-explanation h5{font-size:16px}}
 
-/* Expanded A wa B desu lesson, based on MOEKA's teaching document. */
+
+/* Document hierarchy: main sections, subsections, practice types. */
 .basic-pattern{line-height:1.9;min-width:0}
-.basic-pattern>section{padding:24px 0;border-bottom:1px solid var(--line)}
-.basic-pattern>section>h3{font-size:24px;color:var(--accent);margin:0 0 22px}
-.basic-pattern h3 small{display:block;font-size:14px;font-weight:400;color:var(--muted)}
-.basic-pattern h4{font-size:17px;margin:26px 0 12px;font-weight:500}
-.basic-line{padding:14px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
-.basic-line p{margin:4px 0}
+.basic-pattern>section{padding:0;margin:42px 0 0;border:0}
+.basic-pattern>section:first-child{margin-top:24px}
+.basic-pattern>section>h3{font-size:28px;font-weight:700;color:var(--deep);margin:0 0 24px;line-height:1.5}
+.basic-pattern h3 small,.basic-pattern h4 small{display:block;font-size:14px;font-weight:400;color:var(--muted);line-height:1.7;margin-top:4px}
+.basic-pattern h4{font-size:22px;font-weight:700;color:var(--deep);margin:30px 0 14px;line-height:1.6}
+.basic-pattern h5{font-size:18px;font-weight:700;color:var(--deep);margin:24px 0 10px;line-height:1.7}
+.basic-line{padding:0;margin:0 0 22px;border:0;overflow-wrap:anywhere}
+.basic-line p{margin:3px 0}
 .basic-line-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.basic-line-heading .japanese{font-size:22px;line-height:2}
+.basic-line-heading .japanese{font-size:20px;line-height:2}
+.basic-pattern>section:first-child>.basic-line:first-of-type .japanese{font-size:28px;font-weight:700}
 .basic-line .play-button{font-size:12px;padding:8px 12px;min-height:44px;flex-shrink:0}
-.basic-romaji{color:var(--accent);font-size:15px}
+.basic-romaji{color:var(--muted);font-size:14px}
 .basic-line p[lang=en],.basic-line p[lang=zh-Hans]{font-size:15px;color:var(--muted)}
-.basic-vocabulary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px}
-.basic-cue{background:var(--pink);color:var(--accent);padding:8px 12px;border-radius:6px;margin:22px 0 0}
-.basic-quiz{border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:20px}
-.basic-quiz h4{margin-top:0;font-size:22px}
+.basic-vocabulary{display:block}
+.basic-quiz{border:0;border-radius:0;padding:0;margin:30px 0}
+.basic-quiz h4{margin-top:0;font-size:20px}
 .basic-hint{font-size:14px;line-height:1.8;margin-bottom:16px}
 .basic-hint p{margin:4px 0}
 .basic-choices{display:flex;flex-wrap:wrap;gap:9px}
@@ -362,4 +365,4 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .basic-feedback{background:var(--pink);padding:16px;margin-top:18px;border-radius:8px}
 .basic-feedback>p{margin:8px 0}
 .basic-pattern>button{margin-top:20px}
-@media(max-width:600px){.basic-vocabulary{grid-template-columns:minmax(0,1fr)}.basic-pattern>section>h3{font-size:21px}.basic-quiz{padding:14px}.basic-line-heading .japanese{font-size:20px}}
+@media(max-width:600px){.basic-pattern>section>h3{font-size:25px}.basic-pattern h4{font-size:21px}.basic-pattern h5{font-size:18px}.basic-line-heading .japanese{font-size:19px}}

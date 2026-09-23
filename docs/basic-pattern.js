@@ -351,10 +351,10 @@
   const id=speech.push(text)-1;
   return '<button type="button" class="play-button secondary" data-basic-audio="'+id+'" aria-label="'+esc(text)+'：音声を再生">♪ Listen / 听发音</button>';
  }
- function block(row) {
-  return '<div class="basic-line"><div class="basic-line-heading"><p class="japanese" lang="ja">'+renderJapanese(annotate(row[0]))+'</p>'+audio(row[4]||row[0])+'</div><p class="basic-romaji" lang="ja-Latn">'+esc(row[1])+'</p><p lang="en">'+esc(row[2])+'</p><p lang="zh-Hans">'+esc(row[3])+'</p></div>';
+ function block(row, example = false) {
+  return '<div class="basic-line"><div class="basic-line-heading"><p class="japanese" lang="ja">'+renderJapanese(annotate(row[0]))+'</p>'+(example === true ? audio(row[4]||row[0]) : '')+'</div><p class="basic-romaji" lang="ja-Latn">'+esc(row[1])+'</p><p lang="en">'+esc(row[2])+'</p><p lang="zh-Hans">'+esc(row[3])+'</p></div>';
  }
- const line = index => block(data.sentences[index]);
+ const line = index => block(data.sentences[index], true);
  const heading = (ja,en,zh) => '<h3>'+esc(ja)+'<small><span lang="en">'+esc(en)+'</span> / <span lang="zh-Hans">'+esc(zh)+'</span></small></h3>';
  function feedback(q,index,answer) {
   return '<p class="basic-result"><strong>'+(answer===q.answer?'正解です。':'正解を確認しましょう。')+' 正解：'+esc(choices[q.answer])+'</strong></p>'+
@@ -371,21 +371,26 @@
     '<section>'+heading('1．文型','Sentence patterns','句型')+
     block(['AはBです。','A wa B desu.','A is B.','A是B。','エーはビーです。'])+
     '<p>名詞1 ＋ は ＋ 名詞2 ＋ です<br><span lang="en">Noun 1 + wa + noun 2 + desu</span><br><span lang="zh-Hans">名词1 ＋ は ＋ 名词2 ＋ です</span></p>'+
-    '<h4>肯定文 / Affirmative / 肯定句</h4>'+line(0)+
-    '<h4>否定文（改まった言い方） / Formal negative / 正式否定句</h4>'+
+    '<p>A＝話題になるもの・人　B＝Aについての説明<br><span lang="en">A = the topic (a person or thing); B = information about A.</span><br><span lang="zh-Hans">A＝话题中的人或物；B＝关于A的说明。</span></p>'+
+    '<h4>肯定文 <small>Affirmative / 肯定句</small></h4>'+line(0)+
+    '<h4>否定文／書面語 <small>Formal negative / 正式否定句</small></h4>'+
     block(['AはBではありません。','A wa B dewa arimasen.','A is not B.','A不是B。','エーはビーではありません。'])+line(1)+
-    '<h4>否定文（会話でよく使う形） / Conversational negative / 常用口语否定句</h4>'+
+    '<h4>否定文／口語 <small>Conversational negative / 口语否定句</small></h4>'+
     block(['AはBじゃありません。','A wa B ja arimasen.','A is not B.','A不是B。','エーはビーじゃありません。'])+line(2)+
-    '<h4>疑問文 / Question / 疑问句</h4>'+
+    '<h4>疑問文 <small>Question / 疑问句</small></h4>'+
     block(['AはBですか。','A wa B desu ka.','Is A B?','A是B吗？','エーはビーですか。'])+line(3)+line(4)+line(5)+'</section>'+
     '<section>'+heading('2．解説','Explanation','解说')+data.explanations.slice(0,5).map(block).join('')+'</section>'+
     '<section>'+heading('3．口頭練習','Speaking practice','口头练习')+
-    '<h4>単語 / Vocabulary / 单词</h4><div class="basic-vocabulary">'+data.vocab.map(block).join('')+'</div>'+
+    '<h4>単語 <small>Vocabulary / 单词</small></h4><div class="basic-vocabulary">'+data.vocab.map(block).join('')+'</div>'+
     block(data.explanations[5])+
     '<p>〇〇には自分の国を入れます。例：中国 → 中国人<br><span lang="en">Replace 〇〇 with your country. Example: China → Chinese.</span><br><span lang="zh-Hans">在〇〇处填入自己的国家名。例如：中国 → 中国人。</span></p>'+
-    '<h4>声に出して読みましょう / Read aloud / 请朗读</h4>'+[6,7,8,9,10,11,12].map(line).join('')+
-    '<h4>単語から文を作りましょう / Make sentences from the words / 用单词造句</h4>'+
-    [['彼 ＋ 医者（肯定）',13],['鈴木さん ＋ 先生（肯定）',14],['彼女 ＋ 日本人（肯定）',21],['私 ＋ 中国人（肯定・例）',22],['彼 ＋ 医者（否定・改まった形）',15],['彼 ＋ 医者（否定・会話）',16],['鈴木さん ＋ 留学生（否定・会話）',23],['彼 ＋ 医者（疑問）',17]].map(([cue,i])=>'<div class="basic-practice"><p class="basic-cue">'+renderJapanese(annotate(cue))+'</p>'+line(i)+'</div>').join('')+line(4)+line(5)+'</section>'+
+    '<h4>口頭練習 <small>Speaking practice / 口头练习</small></h4><p>声に出して、質問に答えましょう。<br><span lang="en">Read aloud and answer the questions.</span><br><span lang="zh-Hans">请出声朗读并回答问题。</span></p>'+[6,7,8,9,10,11,12].map(line).join('')+
+    '<h5>肯定文 / Affirmative / 肯定句</h5>'+[13,14,21,22].map(line).join('')+
+    '<h5>否定文（書面語） / Formal negative / 正式否定句</h5>'+line(15)+
+    '<h5>否定文（口語） / Conversational negative / 口语否定句</h5>'+[16,23].map(line).join('')+
+    '<h5>疑問文 / Question / 疑问句</h5>'+line(17)+
+    '<h5>疑問文の答え / Answers / 疑问句的回答</h5>'+
+    ''+line(4)+line(5)+'</section>'+
     '<section>'+heading('4．文型に対する答え方','How to answer','回答方式')+
     block(['AはBですか。','A wa B desu ka.','Is A B?','A是B吗？','エーはビーですか。'])+
     block(['はい、AはBです。','Hai, A wa B desu.','Yes, A is B.','是的，A是B。','はい、エーはビーです。'])+
@@ -394,8 +399,8 @@
     '<p>話題が分かるときは、答えの「Aは」を省略できます。<br><span lang="en">When the topic is clear, you can omit Aは in your answer.</span><br><span lang="zh-Hans">话题明确时，回答中可以省略「Aは」。</span></p></section>'+
     '<section>'+heading('5．問題','Quiz','练习题')+
     '<p>ヒントを読んで、空欄に入る単語を選びましょう。押すと正解と解説が表示されます。<br><span lang="en">Read each hint and choose the word for the blank. Tap to see the answer and explanation.</span><br><span lang="zh-Hans">阅读提示，选择填入空格的单词。点击后显示答案和解说。</span></p>'+
-    quizzes.map(renderQuiz).join('')+'</section>'+
-    '<section>'+heading('口頭練習：自分のことを話しましょう','Talk about yourself','谈谈自己的情况')+
+    quizzes.map(renderQuiz).join('')+
+    '<h4>口頭練習 <small>Speaking practice / 口头练习</small></h4>'+
     '<p>答えは例です。自分に合わせて変えてください。<br><span lang="en">These are model answers. Adapt them to your own situation.</span><br><span lang="zh-Hans">以下为示范回答，请根据自己的情况修改。</span></p>'+
     [24,25,26,27,28,29,30,31,32].map(line).join('')+'</section>'+
     '<button type="button" class="play-button secondary" data-basic-stop>■ 停止 / Stop / 停止</button></div>';
