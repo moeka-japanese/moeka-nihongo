@@ -334,3 +334,32 @@ footer{align-items:flex-start}footer>div{flex:1}footer>span{max-width:270px}
 .keigo-choice-explanation h5{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 14px;font-size:17px;font-weight:500;line-height:1.8;margin:0 0 12px}
 .keigo-your-choice{font-size:12px;padding:2px 8px;border-radius:5px;color:var(--accent);background:var(--pink)}
 @media(max-width:600px){.keigo-choice-explanation{padding:13px}.keigo-choice-explanation h5{font-size:16px}}
+
+/* Expanded A wa B desu lesson, based on MOEKA's teaching document. */
+.basic-pattern{line-height:1.9;min-width:0}
+.basic-pattern>section{padding:24px 0;border-bottom:1px solid var(--line)}
+.basic-pattern>section>h3{font-size:24px;color:var(--accent);margin:0 0 22px}
+.basic-pattern h3 small{display:block;font-size:14px;font-weight:400;color:var(--muted)}
+.basic-pattern h4{font-size:17px;margin:26px 0 12px;font-weight:500}
+.basic-line{padding:14px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.basic-line p{margin:4px 0}
+.basic-line-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.basic-line-heading .japanese{font-size:22px;line-height:2}
+.basic-line .play-button{font-size:12px;padding:8px 12px;min-height:44px;flex-shrink:0}
+.basic-romaji{color:var(--accent);font-size:15px}
+.basic-line p[lang=en],.basic-line p[lang=zh-Hans]{font-size:15px;color:var(--muted)}
+.basic-vocabulary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px}
+.basic-cue{background:var(--pink);color:var(--accent);padding:8px 12px;border-radius:6px;margin:22px 0 0}
+.basic-quiz{border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:20px}
+.basic-quiz h4{margin-top:0;font-size:22px}
+.basic-hint{font-size:14px;line-height:1.8;margin-bottom:16px}
+.basic-hint p{margin:4px 0}
+.basic-choices{display:flex;flex-wrap:wrap;gap:9px}
+.basic-choices button{font:inherit;border:1px solid var(--line);border-radius:8px;background:white;padding:10px 16px;min-height:48px;color:var(--deep)}
+.basic-choices button:focus-visible{outline:3px solid #7445ad;outline-offset:3px}
+.basic-choices button.is-correct{border:2px solid #397052;background:#f0f8f2}
+.basic-choices button.is-incorrect{border:2px solid var(--accent);background:var(--pink)}
+.basic-feedback{background:var(--pink);padding:16px;margin-top:18px;border-radius:8px}
+.basic-feedback>p{margin:8px 0}
+.basic-pattern>button{margin-top:20px}
+@media(max-width:600px){.basic-vocabulary{grid-template-columns:minmax(0,1fr)}.basic-pattern>section>h3{font-size:21px}.basic-quiz{padding:14px}.basic-line-heading .japanese{font-size:20px}}
